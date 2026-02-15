@@ -591,6 +591,18 @@ html {
                 } else if (phase === 'COMPREHENSION') {
                     container.innerHTML = renderComprehension();
                     attachCompHandler();
+                     setTimeout(() => {
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Also try to scroll the container into view
+                        document.querySelector('.study-container')?.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'start' 
+                        });
+                    }, 100);
                 } else if (phase === 'WASHOUT') {
                     container.innerHTML = renderWashout();
                     startWashoutTimer();
