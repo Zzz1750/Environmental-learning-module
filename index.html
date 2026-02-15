@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EL Module</title>
+    <!-- favicon references (kept) -->
+    <link rel="icon" type="image/png" href="./images/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="./images/favicon.svg" />
+    <!-- fonts: Aldrich + Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Aldrich&family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0b0c0e;
+            font-family: "Inter", system-ui, sans-serif;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        #back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.2;
+            filter: grayscale(1) contrast(1.1) brightness(0.7);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 40%, rgba(10, 20, 18, 0.4), #030405 80%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* main card — all content layers live here */
+        .module-card {
+            position: relative;
+            z-index: 20;
+            max-width: 720px;
+            width: 90%;
+            background: rgba(18, 22, 24, 0.75);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            border: 1px solid rgba(220, 240, 255, 0.08);
+            border-radius: 2.5rem;
+            padding: 3rem 2.5rem;
+            box-shadow: 0 30px 50px -20px rgba(0,0,0,0.9), inset 0 1px 1px rgba(255,255,255,0.03);
+            transition: opacity 0.4s ease;
+            color: #eceef0;
+            text-align: center;
+        }
+
+        /* two separate containers: initial (cards) / role picker */
+        .initial-content, .role-content {
+            width: 100%;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+
+        /* hidden utility */
+        .hidden {
+            display: none !important;
+        }
+
+        /* initial components (modular cards) */
+        .title-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 2.2rem;
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.9s cubic-bezier(0.2, 0.9, 0.3, 1), transform 0.9s cubic-bezier(0.2, 0.9, 0.3, 1);
+        }
+
+        .title-block.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .badge {
+            font-family: "Aldrich", sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            background: rgba(255, 255, 255, 0.98);
+            color: #0b0c0e;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            display: inline-block;
+            border: 1px solid rgba(255,255,255,0.4);
+            font-weight: 500;
+            backdrop-filter: blur(4px);
+        }
+
+        h1 {
+            font-family: "Aldrich", sans-serif;
+            font-weight: 400;
+            font-size: clamp(1.8rem, 6vw, 2.8rem);
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            color: white;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .desc-card {
+            background: rgba(12, 16, 19, 0.7);
+            border: 1px solid rgba(220, 240, 255, 0.1);
+            border-radius: 2rem;
+            padding: 2rem 2.2rem;
+            margin: 2.5rem 0 2.8rem 0;
+            text-align: left;
+            backdrop-filter: blur(8px);
+            color: #d3d9de;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            font-weight: 300;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.9s ease 0.2s, transform 0.9s ease 0.2s;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+        }
+
+        .desc-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .instruction-note {
+            display: inline-block;
+            background: rgba(255,255,255,0.03);
+            border-radius: 30px;
+            padding: 0.3rem 1.2rem;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            color: #b0c0ca;
+            margin-top: 0.5rem;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: 1.5px solid rgba(255, 255, 255, 0.5);
+            color: white;
+            padding: 0.9rem 3rem;
+            font-family: "Inter", sans-serif;
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            border-radius: 60px;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            transition: all 0.35s ease;
+            box-shadow: 0 10px 20px -12px rgba(0,0,0,0.8);
+            margin-top: 0.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .action-btn.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .action-btn:hover {
+            background: white;
+            color: #0b0c0e;
+            border-color: white;
+            transform: scale(1.02) translateY(-2px);
+            box-shadow: 0 20px 30px -12px rgba(230, 255, 255, 0.3);
+        }
+
+        /* role selection — nice, clean, two options */
+        .role-panel {
+            text-align: center;
+            animation: fadeSlideIn 0.6s ease forwards;
+        }
+
+        .role-panel h2 {
+            font-family: "Aldrich", sans-serif;
+            font-weight: 400;
+            font-size: 2rem;
+            letter-spacing: -0.02em;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .role-panel .sub {
+            color: #b4c4cf;
+            font-size: 1.1rem;
+            margin-bottom: 2.8rem;
+            font-weight: 300;
+            border-bottom: 1px dashed rgba(255,255,255,0.1);
+            padding-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .role-options {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .role-card {
+            background: rgba(15, 20, 24, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 2rem;
+            padding: 2.2rem 1.8rem;
+            width: 220px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 20px 30px -15px black;
+            text-align: center;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .role-card:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(28, 35, 40, 0.9);
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 30px 40px -15px #000;
+        }
+
+        .role-card:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .role-icon {
+            font-size: 3rem;
+            filter: drop-shadow(0 4px 6px #00000066);
+            margin-bottom: 0.5rem;
+        }
+
+        .role-card h3 {
+            font-family: "Aldrich", sans-serif;
+            font-size: 1.8rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            margin: 0.2rem 0 0.2rem;
+        }
+
+        .role-card p {
+            color: #b0c4d0;
+            font-size: 0.9rem;
+            font-weight: 300;
+            margin: 0;
+        }
+
+        .role-card.student {
+            background: linear-gradient(145deg, rgba(20, 40, 55, 0.9), rgba(10, 20, 30, 0.95));
+        }
+
+        .role-card.educator {
+            background: linear-gradient(145deg, rgba(35, 45, 50, 0.9), rgba(15, 25, 30, 0.95));
+        }
+
+        @keyframes fadeSlideIn {
+            0% { opacity: 0; transform: translateY(15px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* micro adjustments */
+        @media (max-width: 500px) {
+            .module-card { padding: 2rem 1.5rem; }
+            .role-options { gap: 1rem; }
+            .role-card { width: 100%; max-width: 260px; padding: 1.8rem 1rem; }
+            .role-card h3 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+    <img src="./images/BBG05868.JPG" id="back" alt="forest atmosphere">
+    <div class="overlay"></div>
+
+    <div class="module-card" id="moduleCard">
+        <!-- INITIAL CONTENT: modular cards (title, desc, button) -->
+        <div id="initialContent" class="initial-content">
+            <div class="title-block" id="titleBlock">
+                <span class="badge">audio-only<span style="margin-left: 6px; opacity:0.7;">⏺</span></span>
+                <h1>environmental<br>learning module</h1>
+            </div>
+
+            <div class="desc-card" id="descBlock">
+                <p>You will listen to <strong>two anonymous audio versions</strong> (Audio A & Audio B) of the same environmental narration. The versions differ only in audio presentation format.</p>
+                <p>After each audio, you'll answer a few short questions about your experience and comprehension.</p>
+                <span class="instruction-note">🎧 use headphones · quiet space · one sitting</span>
+            </div>
+
+            <button class="action-btn" id="startBtn">start exploration →</button>
+        </div>
+
+        <!-- ROLE CONTENT: hidden initially, shown after click (cards hidden) -->
+        <div id="roleContent" class="role-content hidden">
+            <div class="role-panel">
+                <h2>before we begin</h2>
+                <div class="sub">please identify as</div>
+                <div class="role-options">
+                    <!-- student option: onclick go to student.html -->
+                    <div class="role-card student" id="studentChoice" role="button" tabindex="0" aria-label="continue as student">
+                        <span class="role-icon">🧑‍🎓</span>
+                        <h3>student</h3>
+                        <p></p>
+                    </div>
+                    <!-- educator option: onclick go to teacher.html -->
+                    <div class="role-card educator" id="educatorChoice" role="button" tabindex="0" aria-label="continue as educator">
+                        <span class="role-icon">👩‍🏫</span>
+                        <h3>educator</h3>
+                        <p></p>
+                    </div>
+                </div>
+                <!-- subtle hint -->
+                <p style="margin-top: 2.5rem; font-size:0.85rem; opacity:0.5; letter-spacing:0.5px;">select your path</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // DOM elements
+            const title = document.getElementById('titleBlock');
+            const desc = document.getElementById('descBlock');
+            const startBtn = document.getElementById('startBtn');
+            const initialDiv = document.getElementById('initialContent');
+            const roleDiv = document.getElementById('roleContent');
+
+            // role cards
+            const studentCard = document.getElementById('studentChoice');
+            const educatorCard = document.getElementById('educatorChoice');
+
+            // --- entrance animation for initial modular cards ---
+            function animateInitialIn() {
+                setTimeout(() => {
+                    title.classList.add('show');
+                }, 200);
+                setTimeout(() => {
+                    desc.classList.add('show');
+                }, 500);
+                setTimeout(() => {
+                    startBtn.classList.add('show');
+                }, 850);
+            }
+
+            if (document.readyState === 'complete') {
+                animateInitialIn();
+            } else {
+                window.addEventListener('load', animateInitialIn);
+            }
+
+            // --- START EXPLORATION: hide initial modular cards, show role picker ---
+            startBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // micro feedback on button
+                startBtn.style.transform = 'scale(0.97)';
+                setTimeout(() => {
+                    startBtn.style.transform = '';
+                }, 150);
+
+                // HIDE initial content (modular cards)
+                initialDiv.classList.add('hidden');
+                // SHOW role selection
+                roleDiv.classList.remove('hidden');
+
+                // optional: tiny extra animation hint for roles (already animated via CSS)
+                // we can also preload any resources if needed – but just UI.
+            });
+
+            // --- navigation handlers: student.html / teacher.html ---
+            studentCard.addEventListener('click', (e) => {
+                e.preventDefault();
+                // subtle press effect
+                studentCard.style.transform = 'scale(0.97)';
+                setTimeout(() => {
+                    window.location.href = 'student.html';   // actual redirect
+                }, 120);
+            });
+
+            educatorCard.addEventListener('click', (e) => {
+                e.preventDefault();
+                educatorCard.style.transform = 'scale(0.97)';
+                setTimeout(() => {
+                    window.location.href = 'teacher.html';   // actual redirect
+                }, 120);
+            });
+
+            // optional keyboard / a11y (space/enter)
+            [studentCard, educatorCard].forEach(card => {
+                card.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        card.click();
+                    }
+                });
+            });
+
+            // small reset utility (expose if needed, but not required)
+            window.resetToInitial = function() {
+                initialDiv.classList.remove('hidden');
+                roleDiv.classList.add('hidden');
+                // reanimate entrance if desired (but keep show classes)
+                // but we also need to ensure show classes are present
+                title.classList.add('show');
+                desc.classList.add('show');
+                startBtn.classList.add('show');
+            };
+        })();
+    </script>
+</body>
+</html>

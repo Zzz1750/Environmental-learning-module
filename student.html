@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>student · intake</title>
+    <!-- simple & clean: Inter font only, minimal design -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="./images/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="./images/favicon.svg" />
+    <style>
+        /* ---------- reset / base ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f2f5f8;   /* very light gray-blue */
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            color: #1d2f3f;
+        }
+
+        /* main card — pure white, subtle radius */
+        .paper {
+            max-width: 1000px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 12px 35px -8px rgba(0, 20, 30, 0.1), 0 4px 8px rgba(0,0,0,0.02);
+            padding: 2.5rem 3rem;
+            transition: 0.2s;
+        }
+
+        @media (max-width: 700px) {
+            .paper { padding: 2rem 1.5rem; }
+        }
+
+        /* header */
+        h1 {
+            font-weight: 500;
+            font-size: 2.2rem;
+            letter-spacing: -0.02em;
+            color: #0a2e42;
+            margin-bottom: 0.1rem;
+        }
+
+        .head-note {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #dde5ed;
+            padding-bottom: 1.2rem;
+            margin-bottom: 2rem;
+            color: #446a7a;
+            font-size: 0.95rem;
+        }
+
+        .req-badge {
+            background: #ecf3f8;
+            color: #1b5777;
+            font-weight: 500;
+            padding: 0.25rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+        }
+
+        /* section headers */
+        .section {
+            margin-bottom: 2.4rem;
+        }
+
+        .section h2 {
+            font-weight: 600;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            color: #2b5c7c;
+            margin-bottom: 1.5rem;
+            border-bottom: 1.5px solid #d2e0eb;
+            padding-bottom: 0.4rem;
+        }
+
+        /* question grid: two-column layout for readability */
+        .q-row {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.8rem;
+            gap: 1rem;
+        }
+
+        .q-label {
+            flex: 0 0 240px;
+            font-weight: 500;
+            color: #1d3d51;
+            font-size: 1rem;
+            line-height: 1.5;
+            padding-top: 0.2rem;
+        }
+
+        .q-field {
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .required-star {
+            color: #be3c3c;
+            font-weight: 600;
+            margin-left: 4px;
+        }
+
+        .hint {
+            font-size: 0.8rem;
+            color: #6a8598;
+            margin-top: 0.2rem;
+        }
+
+        /* inputs */
+        input, select {
+            width: 100%;
+            max-width: 360px;
+            padding: 0.7rem 1rem;
+            border: 1px solid #cbdae6;
+            border-radius: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            background: white;
+            transition: 0.15s;
+            color: #0a2a38;
+        }
+
+        input:focus, select:focus {
+            border-color: #317f9f;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(45, 120, 160, 0.08);
+        }
+
+        /* radio groups – clean horizontal wrap */
+        .radio-cluster {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem 2rem;
+            align-items: center;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            cursor: pointer;
+            color: #1e4355;
+            font-size: 0.95rem;
+        }
+
+        .radio-item input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 1.1rem;
+            height: 1.1rem;
+            border: 2px solid #9fb8cc;
+            border-radius: 50%;
+            margin: 0;
+            padding: 0;
+            background: white;
+            transition: 0.1s;
+        }
+
+        .radio-item input[type="radio"]:checked {
+            border-color: #1f6a93;
+            background: #1f6a93;
+            box-shadow: inset 0 0 0 3px white;
+        }
+
+        .radio-item input[type="radio"]:focus-visible {
+            outline: 2px solid #74b9df;
+            outline-offset: 1px;
+        }
+
+        /* Likert (1–5) as inline cluster */
+        .likert-cluster {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem 1.8rem;
+            align-items: center;
+        }
+
+        .likert-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.9rem;
+            color: #1e3d50;
+        }
+
+        .likert-item input[type="radio"] {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        /* button */
+        .action-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 2.8rem;
+        }
+
+        .btn {
+            background: #1b5777;
+            border: none;
+            color: white;
+            font-weight: 500;
+            font-size: 1.1rem;
+            padding: 0.85rem 3rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background 0.15s;
+            border: 1px solid #144a64;
+            letter-spacing: 0.02em;
+            box-shadow: 0 3px 10px rgba(0, 40, 60, 0.1);
+        }
+
+        .btn:hover {
+            background: #114c68;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .footer-note {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #708c9c;
+            text-align: right;
+        }
+
+        /* very small screens: stack label & field */
+        @media (max-width: 650px) {
+            .q-row {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+            .q-label {
+                flex-basis: auto;
+            }
+        }
+
+        /* extra clean spacing */
+        hr {
+            border: none;
+            border-top: 1px solid #e0eaf2;
+            margin: 2.2rem 0 1.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="paper">
+        <h1>student intake</h1>
+        <div class="head-note">
+            <span>complete the form before proceeding</span>
+            <span class="req-badge">required *</span>
+        </div>
+
+        <!-- ========== QUESTIONS ========== -->
+        <!-- SECTION 1 – personal -->
+        <div class="section">
+            <h2>1 · personal</h2>
+
+            <!-- Q1 participant ID (required) -->
+            <div class="q-row">
+                <div class="q-label">Participant ID <span class="required-star">*</span></div>
+                <div class="q-field">
+                    <input type="text" id="pid"  maxlength="20">
+                    <div class="hint">Type your ID exactly as provided.</div>
+                </div>
+            </div>
+
+            <!-- Q2 age (required) -->
+            <div class="q-row">
+                <div class="q-label">Age <span class="required-star">*</span></div>
+                <div class="q-field">
+                    <input type="number" id="age" min="1" max="120" step="1" placeholder="years">
+                </div>
+            </div>
+
+            <!-- Q3 gender (optional) -->
+            <div class="q-row">
+                <div class="q-label">Gender (optional)</div>
+                <div class="q-field">
+                    <div class="radio-cluster" id="genderGroup">
+                        <label class="radio-item"><input type="radio" name="gender" value="Male"> Male</label>
+                        <label class="radio-item"><input type="radio" name="gender" value="Female"> Female</label>
+                        <label class="radio-item"><input type="radio" name="gender" value="Prefer not to say"> Prefer not to say</label>
+                        <label class="radio-item"><input type="radio" name="gender" value="Other"> Other</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2 – device & environment -->
+        <div class="section">
+            <h2>2 · device & environment</h2>
+
+            <!-- Q4 device -->
+            <div class="q-row">
+                <div class="q-label">Device used <span class="required-star">*</span></div>
+                <div class="q-field">
+                    <div class="radio-cluster" id="deviceGroup">
+                        <label class="radio-item"><input type="radio" name="device" value="Mobile"> Mobile</label>
+                        <label class="radio-item"><input type="radio" name="device" value="Laptop"> Laptop</label>
+                        <label class="radio-item"><input type="radio" name="device" value="Desktop"> Desktop</label>
+                        <label class="radio-item"><input type="radio" name="device" value="Tablet"> Tablet</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q5 audio output -->
+            <div class="q-row">
+                <div class="q-label">Audio output <span class="required-star">*</span></div>
+                <div class="q-field">
+                    <div class="radio-cluster" id="audioOutputGroup">
+                        <label class="radio-item"><input type="radio" name="audioOutput" value="Wired earphones"> Wired earphones</label>
+                        <label class="radio-item"><input type="radio" name="audioOutput" value="Bluetooth earphones"> Bluetooth earphones</label>
+                        <label class="radio-item"><input type="radio" name="audioOutput" value="Over-ear headphones"> Over-ear headphones</label>
+                        <label class="radio-item"><input type="radio" name="audioOutput" value="Device speakers"> Device speakers</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q6 headphone model (optional) -->
+            <div class="q-row">
+                <div class="q-label">Headphone/earphone model</div>
+                <div class="q-field">
+                    <input type="text" id="headphoneModel" placeholder="e.g., Sony WH-CH510, Apple EarPods">
+                    <div class="hint">If known (optional).</div>
+                </div>
+            </div>
+
+            <!-- Q7 quiet place? -->
+            <div class="q-row">
+                <div class="q-label">Quiet place right now? <span class="required-star">*</span></div>
+                <div class="q-field">
+                    <div class="radio-cluster" id="quietGroup">
+                        <label class="radio-item"><input type="radio" name="quiet" value="Yes"> Yes</label>
+                        <label class="radio-item"><input type="radio" name="quiet" value="No"> No</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q8 audio enhancers off? -->
+            <div class="q-row">
+                <div class="q-label">Audio enhancers turned OFF? <span class="required-star">*</span></div>
+                <div class="q-field">
+                    <div class="radio-cluster" id="enhancerGroup">
+                        <label class="radio-item"><input type="radio" name="enhancer" value="Yes"> Yes</label>
+                        <label class="radio-item"><input type="radio" name="enhancer" value="No"> No</label>
+                        <label class="radio-item"><input type="radio" name="enhancer" value="Not sure"> Not sure</label>
+                    </div>
+                    <div class="hint">Dolby, bass boost, spatial sound, equalizer presets.</div>
+                </div>
+            </div>
+
+            <!-- Q9 prior 3d/spatial audio -->
+            <div class="q-row">
+                <div class="q-label">Prior 3D/spatial audio experience <span class="required-star">*</span></div>
+                <div class="q-field">
+                    <div class="radio-cluster" id="spatialExpGroup">
+                        <label class="radio-item"><input type="radio" name="spatialExp" value="None"> None</label>
+                        <label class="radio-item"><input type="radio" name="spatialExp" value="Some"> Some</label>
+                        <label class="radio-item"><input type="radio" name="spatialExp" value="Often"> Often</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3 – learning & familiarity -->
+        <div class="section">
+            <h2>3 · learning & familiarity</h2>
+
+            <!-- LP1 learn best from -->
+            <div class="q-row">
+                <div class="q-label">I learn best from: <span class="required-star">*</span></div>
+                <div class="q-field">
+                    <div class="radio-cluster" id="learnBestGroup">
+                        <label class="radio-item"><input type="radio" name="learnBest" value="Audio"> Audio</label>
+                        <label class="radio-item"><input type="radio" name="learnBest" value="Reading"> Reading</label>
+                        <label class="radio-item"><input type="radio" name="learnBest" value="Doing or Practice"> Doing / Practice</label>
+                        <label class="radio-item"><input type="radio" name="learnBest" value="Visuals"> Visuals</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LP2 immersive preference (Likert 1-5) -->
+            <div class="q-row">
+                <div class="q-label">Prefer realistic/immersive materials <span class="required-star">*</span></div>
+                <div class="q-field">
+                    <div class="likert-cluster" id="immersiveGroup">
+                        <label class="likert-item"><input type="radio" name="immersive" value="1"> 1 (strongly disagree)</label>
+                        <label class="likert-item"><input type="radio" name="immersive" value="2"> 2</label>
+                        <label class="likert-item"><input type="radio" name="immersive" value="3"> 3</label>
+                        <label class="likert-item"><input type="radio" name="immersive" value="4"> 4</label>
+                        <label class="likert-item"><input type="radio" name="immersive" value="5"> 5 (strongly agree)</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- familiarity waste management (1-5) -->
+            <div class="q-row">
+                <div class="q-label">Familiarity: waste & pollution <span class="required-star">*</span></div>
+                <div class="q-field">
+                    <div class="likert-cluster" id="familiarGroup">
+                        <label class="likert-item"><input type="radio" name="familiar" value="1"> 1 (not at all)</label>
+                        <label class="likert-item"><input type="radio" name="familiar" value="2"> 2</label>
+                        <label class="likert-item"><input type="radio" name="familiar" value="3"> 3</label>
+                        <label class="likert-item"><input type="radio" name="familiar" value="4"> 4</label>
+                        <label class="likert-item"><input type="radio" name="familiar" value="5"> 5 (very familiar)</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- subtle divider -->
+        <hr>
+
+        <!-- continue button & footer -->
+        <div class="action-bar">
+            <button class="btn" id="continueBtn">continue →</button>
+        </div>
+        <div class="footer-note">All responses are stored</div>
+    </div>
+
+    <script>
+        (function() {
+            // helper: get selected radio value by name
+            function getRadioValue(name) {
+                const radios = document.getElementsByName(name);
+                for (let r of radios) {
+                    if (r.checked) return r.value;
+                }
+                return null;
+            }
+
+            // validate required fields (show alert if missing)
+            function validateRequired() {
+                const pid = document.getElementById('pid').value.trim();
+                if (!pid) return { ok: false, msg: 'Participant ID is required.' };
+
+                const age = document.getElementById('age').value.trim();
+                if (!age) return { ok: false, msg: 'Age is required.' };
+                if (isNaN(age) || Number(age) <= 0) return { ok: false, msg: 'Please enter a valid age.' };
+
+                if (!getRadioValue('device')) return { ok: false, msg: 'Select the device you used.' };
+                if (!getRadioValue('audioOutput')) return { ok: false, msg: 'Select your audio output.' };
+                if (!getRadioValue('quiet')) return { ok: false, msg: 'Indicate if you are in a quiet place.' };
+                if (!getRadioValue('enhancer')) return { ok: false, msg: 'Answer about audio enhancers.' };
+                if (!getRadioValue('spatialExp')) return { ok: false, msg: 'Indicate prior 3D/spatial audio experience.' };
+                if (!getRadioValue('learnBest')) return { ok: false, msg: 'Select how you learn best.' };
+                if (!getRadioValue('immersive')) return { ok: false, msg: 'Rate preference for immersive materials.' };
+                if (!getRadioValue('familiar')) return { ok: false, msg: 'Rate your familiarity with waste topics.' };
+
+                return { ok: true };
+            }
+
+            // capture all responses into a plain object
+            function capture() {
+                return {
+                    Q1_participant_id: document.getElementById('pid').value.trim(),
+                    Q2_age: document.getElementById('age').value.trim() ? Number(document.getElementById('age').value) : null,
+                    Q3_gender: getRadioValue('gender'),
+                    Q4_device: getRadioValue('device'),
+                    Q5_audio_output: getRadioValue('audioOutput'),
+                    Q6_headphone_model: document.getElementById('headphoneModel').value.trim() || '',
+                    Q7_quiet_place: getRadioValue('quiet'),
+                    Q8_audio_enhancers_off: getRadioValue('enhancer'),
+                    Q9_spatial_audio_exp: getRadioValue('spatialExp'),
+                    LP1_learn_best: getRadioValue('learnBest'),
+                    LP2_immersive_preference: getRadioValue('immersive') ? Number(getRadioValue('immersive')) : null,
+                    familiarity_waste: getRadioValue('familiar') ? Number(getRadioValue('familiar')) : null
+                };
+            }
+
+            // global variable (as requested)
+            window.studentResponses = {};
+
+            document.getElementById('continueBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const validation = validateRequired();
+                if (!validation.ok) {
+                    alert('⛔ ' + validation.msg);
+                    return;
+                }
+
+                // store in global
+                const data = capture();
+                window.studentResponses = data;
+
+                // log each variable (so you can see them)
+                console.log('📋 studentResponses (all questions):');
+                for (let [key, val] of Object.entries(data)) {
+                    console.log(`${key} : ${val}`);
+                }
+
+                // DISABLE BUTTON to prevent double submission
+                const btn = document.getElementById('continueBtn');
+                btn.disabled = true;
+                btn.textContent = 'uploading...';
+
+                // UPLOAD TO SHEETDB
+                fetch('https://sheetdb.io/api/v1/1x6klk0wxko42', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ data: [data] }) // SheetDB expects { data: [ {...} ] }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    console.log('✅ SheetDB response:', result);
+                    
+                    // Show success message (brief)
+                    btn.textContent = '✓ saved!';
+                    
+                    // Redirect to student_e1.html after short delay
+                    setTimeout(() => {
+                        window.location.href = 'student_e1.html';
+                    }, 800);
+                })
+                .catch(error => {
+                    console.error('❌ Upload failed:', error);
+                    alert('Upload failed, but your data is saved locally. Please check your connection and try again.\n\nYou will now proceed to the next page.');
+                    
+                    // Still allow proceeding even if upload fails (but show error)
+                    setTimeout(() => {
+                        window.location.href = 'student_e1.html';
+                    }, 1500);
+                });
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Workflow 1</title>
+    <!-- fonts & clean style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="./images/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="./images/favicon.svg" />
+    <style>
+       * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #eef3f7;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    color: #1e3648;
+    line-height: 1.5;
+}
+
+/* mobile first container — full width, soft corners */
+.study-container {
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    border-radius: 2rem;
+    box-shadow: 0 10px 30px -8px rgba(0, 35, 55, 0.2);
+    padding: 1.5rem 1.2rem;
+    transition: padding 0.2s;
+}
+
+/* very small screens get a bit less padding */
+@media (max-width: 420px) {
+    .study-container {
+        padding: 1.2rem 1rem;
+        border-radius: 1.5rem;
+    }
+}
+
+h1 {
+    font-weight: 600;
+    font-size: 1.8rem;
+    letter-spacing: -0.02em;
+    color: #113946;
+    margin-bottom: 0.1rem;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+/* Improved subhead for mobile */
+.subhead {
+    color: #517a8c;
+    border-bottom: 1px solid #d9e4ed;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    gap: 0.75rem;
+}
+
+.badge-session {
+    background: #e1ecf5;
+    color: #1b5777;
+    font-weight: 600;
+    padding: 0.4rem 1.2rem;
+    border-radius: 40px;
+    white-space: nowrap;
+    font-size: 0.9rem;
+}
+
+.content-card {
+    background: #f8fbfe;
+    border-radius: 1.8rem;
+    padding: 1.5rem 1rem;
+    border: 1px solid #deeaf3;
+    margin: 1.2rem 0 0.8rem;
+}
+
+/* increase inner padding only if space allows */
+@media (min-width: 480px) {
+    .content-card {
+        padding: 2rem 1.8rem;
+    }
+}
+
+/* Professional audio controls */
+.audio-player {
+    background: #f0f5fa;
+    border-radius: 2rem;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border: 1px solid #d0e0ed;
+}
+
+.audio-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.audio-btn {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: none;
+    background: white;
+    color: #1b5f7c;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 50, 70, 0.15);
+    border: 1px solid #c0d4e5;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.audio-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 6px rgba(0, 50, 70, 0.1);
+}
+
+.audio-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.audio-btn.pause-btn {
+    background: #1b5f7c;
+    color: white;
+    border-color: #134f69;
+}
+
+.audio-progress {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #1b5777;
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 40px;
+    display: inline-block;
+    margin: 0 auto;
+    width: auto;
+    border: 1px solid #c0d4e5;
+}
+
+/* Waveform visualization (optional, just for aesthetics) */
+.audio-waveform {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    height: 40px;
+    margin: 1rem 0 0.5rem;
+}
+
+.audio-waveform span {
+    width: 4px;
+    height: 20px;
+    background: #9bb6cc;
+    border-radius: 4px;
+    animation: waveform 1s ease-in-out infinite;
+}
+
+.audio-waveform span:nth-child(2) { height: 30px; animation-delay: 0.1s; }
+.audio-waveform span:nth-child(3) { height: 40px; animation-delay: 0.2s; }
+.audio-waveform span:nth-child(4) { height: 30px; animation-delay: 0.3s; }
+.audio-waveform span:nth-child(5) { height: 20px; animation-delay: 0.4s; }
+
+@keyframes waveform {
+    0%, 100% { transform: scaleY(0.8); opacity: 0.5; }
+    50% { transform: scaleY(1.2); opacity: 1; }
+}
+
+/* For very small screens */
+@media (max-width: 380px) {
+    .audio-btn {
+        width: 56px;
+        height: 56px;
+        font-size: 1.5rem;
+    }
+    
+    .audio-controls {
+        gap: 1rem;
+    }
+}
+
+/* Improved button for mobile */
+.btn {
+    background: #1b5f7c;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 1rem 1.8rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    border: 1px solid #134f69;
+    box-shadow: 0 4px 8px rgba(0, 50, 70, 0.12);
+    width: 100%;
+    max-width: 320px;
+    display: inline-block;
+    text-align: center;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 52px;
+}
+
+.btn:active {
+    transform: scale(0.98);
+    background: #134f69;
+}
+
+.btn:disabled {
+    background: #b7cddf;
+    border-color: #96b2c7;
+    cursor: not-allowed;
+    opacity: 0.7;
+    box-shadow: none;
+    transform: none;
+}
+
+.btn-small {
+    padding: 0.75rem 1.2rem;
+    font-size: 1rem;
+    min-height: 44px;
+}
+
+.question-item {
+    margin-bottom: 2rem;
+}
+
+.question-text {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #1e4055;
+    font-size: 1.05rem;
+    line-height: 1.5;
+}
+
+/* Improved radio groups for mobile */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.radio-opt {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.5rem 0;
+    width: 100%;
+}
+
+.radio-opt input[type="radio"] {
+    appearance: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid #9bb6cc;
+    border-radius: 50%;
+    background: white;
+    flex-shrink: 0;
+}
+
+.radio-opt input[type="radio"]:checked {
+    border-color: #1b6f99;
+    background: #1b6f99;
+    box-shadow: inset 0 0 0 5px white;
+}
+
+/* Improved Likert scale for mobile */
+.likert-scale {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+@media (max-width: 480px) {
+    .likert-scale {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 360px) {
+    .likert-scale {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.likert-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    font-size: 1rem;
+    background: #edf4fa;
+    padding: 0.75rem 0.5rem;
+    border-radius: 40px;
+    border: 1px solid #cbdbe9;
+    cursor: pointer;
+    width: 100%;
+}
+
+.likert-item input[type="radio"] {
+    appearance: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid #527f9c;
+    border-radius: 50%;
+    background: white;
+    margin: 0;
+}
+
+.likert-item input[type="radio"]:checked {
+    border-color: #1b5f7c;
+    background: #1b5f7c;
+    box-shadow: inset 0 0 0 4px white;
+}
+
+/* Improved checkbox for mobile */
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem 0 2rem;
+    font-size: 1.05rem;
+    padding: 0.5rem 0;
+}
+
+.checkbox-item input {
+    width: 1.5rem;
+    height: 1.5rem;
+    flex-shrink: 0;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #d0deeb;
+    margin: 2rem 0 1.5rem;
+}
+
+/* Improved timer display */
+.timer-display {
+    font-size: 3.5rem;
+    font-weight: 600;
+    color: #144d69;
+    letter-spacing: 2px;
+    margin: 1.5rem 0;
+}
+
+@media (max-width: 380px) {
+    .timer-display {
+        font-size: 2.8rem;
+    }
+}
+
+.washout-box {
+    text-align: center;
+    padding: 2rem 1rem;
+    background: #ecf3f9;
+    border-radius: 2.5rem;
+}
+
+.loader {
+    border: 4px solid #e9f0f5;
+    border-top: 4px solid #1b5f7c;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    margin: 30px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.hidden {
+    display: none !important;
+}
+
+.text-center { text-align: center; }
+
+/* Improved input field */
+.pid-input {
+    width: 100%;
+    padding: 1.2rem 1.2rem;
+    font-size: 1.1rem;
+    border: 2px solid #cee0ec;
+    border-radius: 60px;
+    margin: 1.5rem 0 1.2rem;
+    font-family: 'Inter', sans-serif;
+    background: white;
+}
+
+.pid-input:focus {
+    outline: none;
+    border-color: #1b5f7c;
+}
+
+/* Improved touch targets */
+label, button, .likert-item, .radio-opt, .checkbox-item {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+/* Extra spacing group */
+.flex-btn {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+/* Add active states for better feedback */
+.radio-opt:active, .likert-item:active, .checkbox-item:active {
+    opacity: 0.7;
+}
+
+/* Prevent text size adjustment on orientation change */
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+/* Add safe area insets for modern phones */
+@supports (padding: max(0px)) {
+    body {
+        padding-left: max(0.75rem, env(safe-area-inset-left));
+        padding-right: max(0.75rem, env(safe-area-inset-right));
+        padding-top: max(0.75rem, env(safe-area-inset-top));
+        padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="study-container" id="mainContainer">
+        <h1 id="mainHeading">environmental audio study</h1>
+        <div class="subhead">
+            <span id="sessionLabel">participant registration</span>
+            <span class="badge-session" id="phaseBadge">start</span>
+        </div>
+        <div id="dynamicContent"></div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- CONFIG ----------
+            const SHEETDB_URL = 'https://sheetdb.io/api/v1/r1hegncququke';
+            const REDIRECT_URL = 'student_e2.html';
+
+            // Audio file paths
+            const AUDIO_FILES = {
+                audio1: '/audio/1.wav',
+                audio2: '/audio/2.wav'
+            };
+
+            const COMP_QUESTIONS = {
+                audio1: [
+                    { q: "ENV‑CC1. The narration says some pollution types are often ignored but still affect ecosystems. Which pair matches that idea?",
+                      options: ["A) Air and water", "B) Soil and water", "C) Light and noise", "D) Air and soil"] },
+                    { q: "ENV‑CC2. In the bin‑area example, what is the main problem described when wet and dry waste are mixed?",
+                      options: ["A) Wet waste makes bins heavier to carry",
+                                "B) Dry waste gets contaminated, so recycling becomes difficult even if bins are available",
+                                "C) Wet waste makes plastic decompose faster",
+                                "D) Dry waste automatically becomes hazardous waste"] },
+                    { q: "ENV‑CC3. The narration defines hazardous waste using which risk categories?",
+                      options: ["A) Wet, dry, mixed", "B) Heavy, light, sharp",
+                                "C) Ignitable, reactive, corrosive, or toxic", "D) Organic, inorganic, recyclable"] },
+                    { q: "ENV‑CC4. Which statement best matches the narration’s point about waste management?",
+                      options: ["A) Waste management mainly means cleaning public places regularly",
+                                "B) Waste management is only about recycling plastic",
+                                "C) Waste management includes collection, transport, processing/disposal, managing and monitoring to reduce harm",
+                                "D) Waste management is optional if bins are available"] }
+                ],
+                audio2: [
+                    { q: "ENV‑CC1 (audio2). According to the second narration, which factor most affects water quality in urban areas?",
+                      options: ["A) Air temperature", "B) Stormwater runoff", "C) Noise pollution", "D) Light intensity"] },
+                    { q: "ENV‑CC2. The term 'brownfield' in the audio refers to:",
+                      options: ["A) agricultural land", "B) previously developed land that may be contaminated", "C) natural forest", "D) desertified area"] },
+                    { q: "ENV‑CC3. What is the main message regarding soil contamination?",
+                      options: ["A) it only affects farming", "B) it can persist for decades and affect groundwater", "C) it is easy to reverse", "D) it is always visible"] },
+                    { q: "ENV‑CC4. The narration suggests that electronic waste (e‑waste) is problematic because:",
+                      options: ["A) it smells bad", "B) it contains valuable metals", "C) it contains toxic elements like lead and mercury", "D) it takes up too much space"] }
+                ]
+            };
+
+            const RATING_ITEMS = [
+                { id: 'att', text: 'I stayed fully attentive throughout this audio.' },
+                { id: 'clarity', text: 'I understood the points clearly.' },
+                { id: 'realism', text: 'The sound scene felt realistic.' },
+                { id: 'effort', text: 'It took mental effort to follow the content.' }
+            ];
+
+            // ---------- state ----------
+            let participantId = '';
+            let sessionOrder = [];
+            let currentSessionIndex = 0;
+            let currentAudioId = null;
+            let phase = 'PID_ENTRY';
+            let timerInterval = null;
+            let washoutSeconds = 30;
+            let audioElement = null;
+            let isAudioPlaying = false;
+            let audioEnded = false;
+
+            let sessionData = {
+                audio1: { ratings: {}, comp: {}, listened: false },
+                audio2: { ratings: {}, comp: {}, listened: false }
+            };
+
+            // ---------- helpers ----------
+            function shuffle(arr) {
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
+            }
+
+            function initSessionOrder() {
+                sessionOrder = shuffle(['audio1', 'audio2']);
+                currentSessionIndex = 0;
+                currentAudioId = sessionOrder[0];
+            }
+
+            // ---------- render ----------
+            function render() {
+                const container = document.getElementById('dynamicContent');
+                const headingEl = document.getElementById('mainHeading');
+                const phaseBadge = document.getElementById('phaseBadge');
+                const sessionLabel = document.getElementById('sessionLabel');
+
+                if (!container) return;
+
+                if (phase === 'PID_ENTRY') {
+                    headingEl.innerText = 'Workflow 1';
+                    phaseBadge.innerText = 'start';
+                    sessionLabel.innerText = 'enter your ID';
+                    container.innerHTML = renderPidEntry();
+                    attachPidHandler();
+                    return;
+                }
+
+                if (phase === 'COMPLETED') {
+                    headingEl.innerText = 'submitting data...';
+                    phaseBadge.innerText = 'upload';
+                    sessionLabel.innerText = 'please wait';
+                    container.innerHTML = renderSubmitScreen();
+                    submitAllData();
+                    return;
+                }
+
+                const displayNum = currentSessionIndex + 1;
+                const audioName = currentAudioId === 'audio1' ? 'A' : 'B';
+                phaseBadge.innerText = `session ${displayNum} · audio ${audioName}`;
+                sessionLabel.innerText = `session ${displayNum}/2 · ID: ${participantId}`;
+
+                if (phase === 'AUDIO_PLAYBACK') {
+                    container.innerHTML = renderAudioPlayback();
+                    attachAudioHandlers();
+                } else if (phase === 'RATINGS') {
+                    container.innerHTML = renderRatings();
+                    attachRatingsHandler();
+                } else if (phase === 'COMPREHENSION') {
+                    container.innerHTML = renderComprehension();
+                    attachCompHandler();
+                } else if (phase === 'WASHOUT') {
+                    container.innerHTML = renderWashout();
+                    startWashoutTimer();
+                }
+            }
+
+            function renderPidEntry() {
+                return `
+                    <div class="content-card">
+                        <h3 style="margin-bottom:1.2rem;">Enter your Participant ID</h3>
+                        <p style="color:#3d637b; margin-bottom:0.8rem;">Type your ID.</p>
+                        <input type="text" id="participantId" class="pid-input" autocomplete="off">
+                        <div class="flex-btn"><button class="btn" id="startStudyBtn" disabled>begin sessions →</button></div>
+                    </div>
+                `;
+            }
+
+            function attachPidHandler() {
+                const pidInput = document.getElementById('participantId');
+                const startBtn = document.getElementById('startStudyBtn');
+                pidInput.addEventListener('input', function(e) {
+                    startBtn.disabled = e.target.value.trim().length === 0;
+                });
+                startBtn.addEventListener('click', function() {
+                    participantId = pidInput.value.trim();
+                    if (participantId) {
+                        initSessionOrder();
+                        phase = 'AUDIO_PLAYBACK';
+                        render();
+                    }
+                });
+            }
+
+            function renderAudioPlayback() {
+                const audioLetter = currentAudioId === 'audio1' ? 'A' : 'B';
+                return `
+                    <div class="content-card">
+                        <h2 style="font-weight:500; margin-bottom:0.3rem;">Environment Narration - Audio ${audioLetter}</h2>
+                        <p style="color:#3d637b; margin-bottom:1rem;">Use the controls below to listen</p>
+                        
+                        <div class="audio-player">
+                            <div class="audio-waveform">
+                                <span></span><span></span><span></span><span></span><span></span>
+                            </div>
+                            
+                            <div class="audio-controls">
+                                <button class="audio-btn" id="playBtn" aria-label="Play">▶</button>
+                                <button class="audio-btn pause-btn" id="pauseBtn" disabled aria-label="Pause">⏸</button>
+                            </div>
+                            
+                            <div class="audio-progress" id="audioProgress">0:00 / 0:00</div>
+                        </div>
+                        
+                        <div style="margin: 1.5rem 0 1rem;" id="listenedCheckWrapper">
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="listenedCheck" disabled>
+                                <span>I listened to the full audio. <span style="color:#af4c4c;">(required)</span></span>
+                            </label>
+                        </div>
+                        <div class="flex-btn"><button class="btn" id="continueAfterAudioBtn" disabled>continue →</button></div>
+                    </div>
+                `;
+            }
+
+            function attachAudioHandlers() {
+                // Create audio element
+                const audioSrc = currentAudioId === 'audio1' ? AUDIO_FILES.audio1 : AUDIO_FILES.audio2;
+                audioElement = new Audio(audioSrc);
+                
+                const playBtn = document.getElementById('playBtn');
+                const pauseBtn = document.getElementById('pauseBtn');
+                const listenedChk = document.getElementById('listenedCheck');
+                const continueBtn = document.getElementById('continueAfterAudioBtn');
+                const progressEl = document.getElementById('audioProgress');
+                
+                isAudioPlaying = false;
+                audioEnded = false;
+
+                // Update progress
+                audioElement.addEventListener('timeupdate', function() {
+                    if (progressEl && audioElement.duration) {
+                        const currentMinutes = Math.floor(audioElement.currentTime / 60);
+                        const currentSeconds = Math.floor(audioElement.currentTime % 60);
+                        const totalMinutes = Math.floor(audioElement.duration / 60);
+                        const totalSeconds = Math.floor(audioElement.duration % 60);
+                        progressEl.textContent = `${currentMinutes}:${currentSeconds.toString().padStart(2, '0')} / ${totalMinutes}:${totalSeconds.toString().padStart(2, '0')}`;
+                    }
+                });
+
+                audioElement.addEventListener('ended', function() {
+                    isAudioPlaying = false;
+                    audioEnded = true;
+                    if (playBtn) playBtn.disabled = false;
+                    if (pauseBtn) pauseBtn.disabled = true;
+                    if (listenedChk) {
+                        listenedChk.disabled = false;
+                        // Gentle notification instead of alert
+                        if (progressEl) progressEl.textContent = '✓ Audio complete';
+                    }
+                    if (progressEl) progressEl.textContent = '✓ Complete';
+                });
+
+                // Play button
+                if (playBtn) {
+                    playBtn.addEventListener('click', function() {
+                        audioElement.play();
+                        isAudioPlaying = true;
+                        playBtn.disabled = true;
+                        pauseBtn.disabled = false;
+                    });
+                }
+
+                // Pause button
+                if (pauseBtn) {
+                    pauseBtn.addEventListener('click', function() {
+                        audioElement.pause();
+                        isAudioPlaying = false;
+                        playBtn.disabled = false;
+                        pauseBtn.disabled = true;
+                    });
+                }
+
+                // Listened checkbox
+                if (listenedChk) {
+                    listenedChk.addEventListener('change', function(e) {
+                        if (e.target.checked && continueBtn) {
+                            continueBtn.disabled = false;
+                            sessionData[currentAudioId].listened = true;
+                        } else if (continueBtn) {
+                            continueBtn.disabled = true;
+                        }
+                    });
+                }
+
+                // Continue button
+                if (continueBtn) {
+                    continueBtn.addEventListener('click', function() {
+                        if (audioElement) {
+                            audioElement.pause();
+                            audioElement = null;
+                        }
+                        phase = 'RATINGS';
+                        render();
+                    });
+                }
+            }
+
+            function renderRatings() {
+                let html = `
+                    <div class="content-card">
+                        <h3 style="margin-bottom:1.5rem;">Rate your experience</h3>
+                        <p style="color:#3a5c70; margin-bottom:1.2rem;">1 Strongly disagree · 2 Disagree · 3 Slightly disagree · 4 Neutral · 5 Slightly agree · 6 Agree · 7 Strongly agree</p>
+                `;
+                RATING_ITEMS.forEach((item) => {
+                    html += `<div class="question-item">
+                        <div class="question-text">${item.text}</div>
+                        <div class="likert-scale" id="rating-${item.id}">`;
+                    for (let val = 1; val <= 7; val++) {
+                        html += `<label class="likert-item"><input type="radio" name="rating_${item.id}" value="${val}"> ${val}</label>`;
+                    }
+                    html += `</div></div>`;
+                });
+                html += `<div class="flex-btn"><button class="btn" id="submitRatingsBtn">continue →</button></div>`;
+                html += `</div>`;
+                return html;
+            }
+
+            function attachRatingsHandler() {
+                document.getElementById('submitRatingsBtn')?.addEventListener('click', function() {
+                    let allSelected = true;
+                    RATING_ITEMS.forEach(item => {
+                        const radios = document.getElementsByName(`rating_${item.id}`);
+                        let selected = null;
+                        for (let r of radios) if (r.checked) { selected = r.value; break; }
+                        if (!selected) allSelected = false;
+                        else sessionData[currentAudioId].ratings[item.id] = Number(selected);
+                    });
+                    if (!allSelected) {
+                        alert('Please answer all rating items.');
+                        return;
+                    }
+                    phase = 'COMPREHENSION';
+                    render();
+                });
+            }
+
+            function renderComprehension() {
+                const questions = COMP_QUESTIONS[currentAudioId];
+                let html = `<div class="content-card"><h3 style="margin-bottom:1.2rem;">Comprehension check</h3>`;
+                questions.forEach((q, idx) => {
+                    html += `<div class="question-item" data-qidx="${idx}">
+                        <div class="question-text">${q.q}</div>`;
+                    q.options.forEach(opt => {
+                        html += `<label class="radio-opt" style="display:flex; margin:0.5rem 0;">
+                            <input type="radio" name="comp_${currentAudioId}_${idx}" value="${opt}"> ${opt}
+                        </label>`;
+                    });
+                    html += `</div>`;
+                });
+                html += `<div class="flex-btn"><button class="btn" id="submitCompBtn">continue →</button></div></div>`;
+                return html;
+            }
+
+            function attachCompHandler() {
+                document.getElementById('submitCompBtn')?.addEventListener('click', function() {
+                    const questions = COMP_QUESTIONS[currentAudioId];
+                    let allAnswered = true;
+                    let answers = {};
+                    for (let i = 0; i < questions.length; i++) {
+                        const radios = document.getElementsByName(`comp_${currentAudioId}_${i}`);
+                        let selected = null;
+                        for (let r of radios) if (r.checked) { selected = r.value; break; }
+                        if (!selected) allAnswered = false;
+                        else answers[`q${i+1}`] = selected;
+                    }
+                    if (!allAnswered) {
+                        alert('Please answer all comprehension questions.');
+                        return;
+                    }
+                    sessionData[currentAudioId].comp = answers;
+
+                    if (currentSessionIndex === 0) {
+                        phase = 'WASHOUT';
+                        render();
+                    } else {
+                        phase = 'COMPLETED';
+                        render();
+                    }
+                });
+            }
+
+            function renderWashout() {
+                return `
+                    <div class="content-card washout-box">
+                        <h2 style="margin-bottom:0.8rem;">short break</h2>
+                        <p style="margin-bottom:1.5rem;">Please wait for the timer.</p>
+                        <div class="timer-display" id="timerDisplay">30s</div>
+                        <div class="flex-btn"><button class="btn" id="washoutContinueBtn" disabled>continue</button></div>
+                    </div>
+                `;
+            }
+
+            function startWashoutTimer() {
+                if (timerInterval) clearInterval(timerInterval);
+                let timeLeft = washoutSeconds;
+                const timerEl = document.getElementById('timerDisplay');
+                const continueBtn = document.getElementById('washoutContinueBtn');
+                if (!timerEl || !continueBtn) return;
+
+                timerInterval = setInterval(() => {
+                    timeLeft -= 1;
+                    timerEl.innerText = timeLeft + 's';
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        timerInterval = null;
+                        timerEl.innerText = '0s · ready';
+                        continueBtn.disabled = false;
+                    }
+                }, 1000);
+
+                continueBtn?.addEventListener('click', function onWashoutNext() {
+                    if (continueBtn.disabled) return;
+                    currentSessionIndex = 1;
+                    currentAudioId = sessionOrder[1];
+                    phase = 'AUDIO_PLAYBACK';
+                    render();
+                }, { once: true });
+            }
+
+            function renderSubmitScreen() {
+                return `
+                    <div class="content-card text-center">
+                        <h2>Uploading</h2>
+                        <div class="loader"></div>
+                        <p style="margin-top:1.2rem; color:#2e6279;">Saving responses...</p>
+                    </div>
+                `;
+            }
+
+            function buildSheetRow() {
+                return {
+                    participant_id: participantId,
+                    session_order: sessionOrder.join('|'),
+                    audio1_listened: sessionData.audio1.listened ? 'yes' : 'no',
+                    audio1_rating_att: sessionData.audio1.ratings.att || '',
+                    audio1_rating_clarity: sessionData.audio1.ratings.clarity || '',
+                    audio1_rating_realism: sessionData.audio1.ratings.realism || '',
+                    audio1_rating_effort: sessionData.audio1.ratings.effort || '',
+                    audio1_comp_q1: sessionData.audio1.comp?.q1 || '',
+                    audio1_comp_q2: sessionData.audio1.comp?.q2 || '',
+                    audio1_comp_q3: sessionData.audio1.comp?.q3 || '',
+                    audio1_comp_q4: sessionData.audio1.comp?.q4 || '',
+                    audio2_listened: sessionData.audio2.listened ? 'yes' : 'no',
+                    audio2_rating_att: sessionData.audio2.ratings.att || '',
+                    audio2_rating_clarity: sessionData.audio2.ratings.clarity || '',
+                    audio2_rating_realism: sessionData.audio2.ratings.realism || '',
+                    audio2_rating_effort: sessionData.audio2.ratings.effort || '',
+                    audio2_comp_q1: sessionData.audio2.comp?.q1 || '',
+                    audio2_comp_q2: sessionData.audio2.comp?.q2 || '',
+                    audio2_comp_q3: sessionData.audio2.comp?.q3 || '',
+                    audio2_comp_q4: sessionData.audio2.comp?.q4 || '',
+                    timestamp: new Date().toISOString()
+                };
+            }
+
+            function submitAllData() {
+                const row = buildSheetRow();
+                fetch(SHEETDB_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: [row] })
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error('HTTP error ' + res.status);
+                    return res.json();
+                })
+                .then(() => {
+                    setTimeout(() => { window.location.href = REDIRECT_URL; }, 2000);
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Upload failed. Please refresh.');
+                });
+            }
+
+            // start
+            phase = 'PID_ENTRY';
+            render();
+        })();
+    </script>
+</body>
+</html>
