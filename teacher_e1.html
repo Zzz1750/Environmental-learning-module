@@ -2,10 +2,943 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Teacher Topic 1 - Educator Evaluation</title>
+    <!-- fonts & clean style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="./images/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="./images/favicon.svg" />
+    <style>
+       * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #eef3f7;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    color: #1e3648;
+    line-height: 1.5;
+}
+
+/* mobile first container — full width, soft corners */
+.study-container {
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    border-radius: 2rem;
+    box-shadow: 0 10px 30px -8px rgba(0, 35, 55, 0.2);
+    padding: 1.5rem 1.2rem;
+    transition: padding 0.2s;
+}
+
+/* very small screens get a bit less padding */
+@media (max-width: 420px) {
+    .study-container {
+        padding: 1.2rem 1rem;
+        border-radius: 1.5rem;
+    }
+}
+
+h1 {
+    font-weight: 600;
+    font-size: 1.8rem;
+    letter-spacing: -0.02em;
+    color: #113946;
+    margin-bottom: 0.1rem;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+/* Improved subhead for mobile */
+.subhead {
+    color: #517a8c;
+    border-bottom: 1px solid #d9e4ed;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    gap: 0.75rem;
+}
+
+.badge-session {
+    background: #e1ecf5;
+    color: #1b5777;
+    font-weight: 600;
+    padding: 0.4rem 1.2rem;
+    border-radius: 40px;
+    white-space: nowrap;
+    font-size: 0.9rem;
+}
+
+.content-card {
+    background: #f8fbfe;
+    border-radius: 1.8rem;
+    padding: 1.5rem 1rem;
+    border: 1px solid #deeaf3;
+    margin: 1.2rem 0 0.8rem;
+}
+
+/* increase inner padding only if space allows */
+@media (min-width: 480px) {
+    .content-card {
+        padding: 2rem 1.8rem;
+    }
+}
+
+/* Standard audio player styling */
+.audio-player {
+    background: #f0f5fa;
+    border-radius: 2rem;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border: 1px solid #d0e0ed;
+}
+
+.audio-element {
+    width: 100%;
+    margin-bottom: 1rem;
+    border-radius: 50px;
+}
+
+.audio-element::-webkit-media-controls-panel {
+    background: #f0f5fa;
+}
+
+.audio-element::-webkit-media-controls-play-button,
+.audio-element::-webkit-media-controls-mute-button {
+    border-radius: 50%;
+}
+
+.audio-element::-webkit-media-controls-current-time-display,
+.audio-element::-webkit-media-controls-time-remaining-display {
+    color: #1b5777;
+    font-weight: 500;
+}
+
+/* Progress indicator for audio completion */
+.audio-status {
+    text-align: center;
+    font-size: 0.95rem;
+    color: #3d637b;
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 40px;
+    display: inline-block;
+    margin: 0.5rem auto 0;
+    width: auto;
+    border: 1px solid #c0d4e5;
+}
+
+.audio-status.completed {
+    background: #e1f0e8;
+    color: #1e6f4c;
+    border-color: #a0cfb5;
+}
+
+/* Improved button for mobile */
+.btn {
+    background: #1b5f7c;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 1rem 1.8rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    border: 1px solid #134f69;
+    box-shadow: 0 4px 8px rgba(0, 50, 70, 0.12);
+    width: 100%;
+    max-width: 320px;
+    display: inline-block;
+    text-align: center;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 52px;
+}
+
+.btn:active {
+    transform: scale(0.98);
+    background: #134f69;
+}
+
+.btn:disabled {
+    background: #b7cddf;
+    border-color: #96b2c7;
+    cursor: not-allowed;
+    opacity: 0.7;
+    box-shadow: none;
+    transform: none;
+}
+
+.btn-small {
+    padding: 0.75rem 1.2rem;
+    font-size: 1rem;
+    min-height: 44px;
+}
+
+/* Text input styling */
+.text-input {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    border: 2px solid #cee0ec;
+    border-radius: 20px;
+    margin: 0.5rem 0 1rem;
+    font-family: 'Inter', sans-serif;
+    background: white;
+    resize: vertical;
+    min-height: 100px;
+}
+
+.text-input:focus {
+    outline: none;
+    border-color: #1b5f7c;
+}
+
+.question-item {
+    margin-bottom: 2rem;
+}
+
+.question-text {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #1e4055;
+    font-size: 1.05rem;
+    line-height: 1.5;
+}
+
+/* Improved radio groups for mobile */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.radio-opt {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.5rem 0;
+    width: 100%;
+}
+
+.radio-opt input[type="radio"] {
+    appearance: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid #9bb6cc;
+    border-radius: 50%;
+    background: white;
+    flex-shrink: 0;
+}
+
+.radio-opt input[type="radio"]:checked {
+    border-color: #1b6f99;
+    background: #1b6f99;
+    box-shadow: inset 0 0 0 5px white;
+}
+
+/* Improved Likert scale for mobile */
+.likert-scale {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+@media (max-width: 480px) {
+    .likert-scale {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 360px) {
+    .likert-scale {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.likert-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    font-size: 1rem;
+    background: #edf4fa;
+    padding: 0.75rem 0.5rem;
+    border-radius: 40px;
+    border: 1px solid #cbdbe9;
+    cursor: pointer;
+    width: 100%;
+}
+
+.likert-item input[type="radio"] {
+    appearance: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid #527f9c;
+    border-radius: 50%;
+    background: white;
+    margin: 0;
+}
+
+.likert-item input[type="radio"]:checked {
+    border-color: #1b5f7c;
+    background: #1b5f7c;
+    box-shadow: inset 0 0 0 4px white;
+}
+
+/* Improved checkbox for mobile */
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem 0 2rem;
+    font-size: 1.05rem;
+    padding: 0.5rem 0;
+}
+
+.checkbox-item input {
+    width: 1.5rem;
+    height: 1.5rem;
+    flex-shrink: 0;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #d0deeb;
+    margin: 2rem 0 1.5rem;
+}
+
+.loader {
+    border: 4px solid #e9f0f5;
+    border-top: 4px solid #1b5f7c;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    margin: 30px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.hidden {
+    display: none !important;
+}
+
+.text-center { text-align: center; }
+
+/* Improved input field */
+.pid-input {
+    width: 100%;
+    padding: 1.2rem 1.2rem;
+    font-size: 1.1rem;
+    border: 2px solid #cee0ec;
+    border-radius: 60px;
+    margin: 1.5rem 0 1.2rem;
+    font-family: 'Inter', sans-serif;
+    background: white;
+}
+
+.pid-input:focus {
+    outline: none;
+    border-color: #1b5f7c;
+}
+
+/* Improved touch targets */
+label, button, .likert-item, .radio-opt, .checkbox-item {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+/* Extra spacing group */
+.flex-btn {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+/* Add active states for better feedback */
+.radio-opt:active, .likert-item:active, .checkbox-item:active {
+    opacity: 0.7;
+}
+
+/* Prevent text size adjustment on orientation change */
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+/* Add safe area insets for modern phones */
+@supports (padding: max(0px)) {
+    body {
+        padding-left: max(0.75rem, env(safe-area-inset-left));
+        padding-right: max(0.75rem, env(safe-area-inset-right));
+        padding-top: max(0.75rem, env(safe-area-inset-top));
+        padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    }
+}
+
+/* Instruction text style */
+.instruction-text {
+    font-size: 0.95rem;
+    color: #3d637b;
+    background: #e9f0f7;
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #1b5f7c;
+    line-height: 1.5;
+}
+    </style>
 </head>
 <body>
-    <p>teacher topic 1</p>
+    <div class="study-container" id="mainContainer">
+        <h1 id="mainHeading">environmental audio study</h1>
+        <div class="subhead">
+            <span id="sessionLabel">educator registration</span>
+            <span class="badge-session" id="phaseBadge">start</span>
+        </div>
+        <div id="dynamicContent"></div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- CONFIG ----------
+            const SHEETDB_URL = 'https://sheetdb.io/api/v1/nnyagfj2hiw0l';
+            const REDIRECT_URL = 'teacher_e2.html';
+
+            // Audio file paths (same as original)
+            const AUDIO_FILES = {
+                audio1: 'e1_1.wav',
+                audio2: 'e1_2.wav'
+            };
+
+            // Educator rating items for each audio
+            const EDUCATOR_RATING_ITEMS = [
+                { id: 'clarity', text: 'ENV-A-R1 (Clarity): The narration content was clear and easy to follow.' },
+                { id: 'engagement', text: 'ENV-A-R2 (Engagement): This format can hold student attention for the full duration.' },
+                { id: 'learning_support', text: 'ENV-A-R3 (Perceived learning support): This format supports understanding/retention of the key points.' },
+                { id: 'appropriateness', text: 'ENV-A-R4 (Appropriateness): The audio style is appropriate for academic training/teaching.' },
+                { id: 'cognitive_load', text: 'ENV-A-R5 (Cognitive load): The audio design could overload learners. (reverse-interpreted)' },
+                { id: 'distraction_risk', text: 'ENV-A-R6 (Distraction risk): Background sound elements could distract students. (reverse-interpreted)' },
+                { id: 'feasibility', text: 'ENV-A-R7 (Feasibility): This format is feasible with mixed devices/headphones in real settings.' }
+            ];
+
+            // ---------- state ----------
+            let educatorId = '';
+            let sessionOrder = [];
+            let currentSessionIndex = 0;
+            let currentAudioId = null;
+            let phase = 'PID_ENTRY';
+            let audioElement = null;
+
+            let sessionData = {
+                audio1: { 
+                    ratings: {}, 
+                    listened: false
+                },
+                audio2: { 
+                    ratings: {}, 
+                    listened: false
+                }
+            };
+
+            // Comparative evaluation data
+            let comparativeData = {
+                env_c1: '',
+                env_c2: '',
+                env_c3: '',
+                env_c4: '',
+                env_c5: '',
+                env_c6: '',
+                env_c7: '',
+                env_c8: ''
+            };
+
+            // ---------- helpers ----------
+            function shuffle(arr) {
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
+            }
+
+            function initSessionOrder() {
+                sessionOrder = shuffle(['audio1', 'audio2']);
+                currentSessionIndex = 0;
+                currentAudioId = sessionOrder[0];
+            }
+
+            // Function to track audio completion
+            function setupAudioTracking(audioElement, audioId) {
+                if (!audioElement) return;
+                
+                audioElement.addEventListener('ended', function() {
+                    sessionData[audioId].listened = true;
+                    const statusEl = document.getElementById('audioStatus');
+                    if (statusEl) {
+                        statusEl.textContent = '✓ Audio fully listened';
+                        statusEl.classList.add('completed');
+                    }
+                    
+                    // Enable continue button if it exists
+                    const continueBtn = document.getElementById('continueAfterAudioBtn');
+                    if (continueBtn) {
+                        continueBtn.disabled = false;
+                    }
+                });
+
+                // Also mark as listened if user reaches near the end (95%)
+                audioElement.addEventListener('timeupdate', function() {
+                    if (audioElement.duration && (audioElement.currentTime / audioElement.duration) > 0.95) {
+                        if (!sessionData[audioId].listened) {
+                            sessionData[audioId].listened = true;
+                            const statusEl = document.getElementById('audioStatus');
+                            if (statusEl) {
+                                statusEl.textContent = '✓ Audio fully listened';
+                                statusEl.classList.add('completed');
+                            }
+                            
+                            // Enable continue button if it exists
+                            const continueBtn = document.getElementById('continueAfterAudioBtn');
+                            if (continueBtn) {
+                                continueBtn.disabled = false;
+                            }
+                        }
+                    }
+                });
+            }
+
+            // ---------- render ----------
+            function render() {
+                const container = document.getElementById('dynamicContent');
+                const headingEl = document.getElementById('mainHeading');
+                const phaseBadge = document.getElementById('phaseBadge');
+                const sessionLabel = document.getElementById('sessionLabel');
+
+                if (!container) return;
+
+                if (phase === 'PID_ENTRY') {
+                    headingEl.innerText = 'Topic 1 - Educator Evaluation';
+                    phaseBadge.innerText = 'start';
+                    sessionLabel.innerText = 'enter educator ID';
+                    container.innerHTML = renderPidEntry();
+                    attachPidHandler();
+                    return;
+                }
+
+                if (phase === 'COMPARATIVE') {
+                    headingEl.innerText = 'Comparative Evaluation';
+                    phaseBadge.innerText = 'final';
+                    sessionLabel.innerText = `ID: ${educatorId}`;
+                    container.innerHTML = renderComparative();
+                    attachComparativeHandler();
+                    return;
+                }
+
+                if (phase === 'COMPLETED') {
+                    headingEl.innerText = 'submitting data...';
+                    phaseBadge.innerText = 'upload';
+                    sessionLabel.innerText = 'please wait';
+                    container.innerHTML = renderSubmitScreen();
+                    submitAllData();
+                    return;
+                }
+
+                const displayNum = currentSessionIndex + 1;
+                const audioName = currentAudioId === 'audio1' ? 'A' : 'B';
+                phaseBadge.innerText = `session ${displayNum} · audio ${audioName}`;
+                sessionLabel.innerText = `session ${displayNum}/2 · ID: ${educatorId}`;
+
+                if (phase === 'AUDIO_PLAYBACK') {
+                    container.innerHTML = renderAudioPlayback(audioName);
+                    attachAudioHandlers();
+                } else if (phase === 'RATINGS') {
+                    container.innerHTML = renderRatings(audioName);
+                    attachRatingsHandler();
+                }
+            }
+
+            function renderPidEntry() {
+                return `
+                    <div class="content-card">
+                        <h3 style="margin-bottom:1.2rem;">Enter your Educator ID</h3>
+                        <p style="color:#3d637b; margin-bottom:0.8rem;">Please enter your participant ID.</p>
+                        <input type="text" id="educatorId" class="pid-input" autocomplete="off">
+                        <div class="flex-btn"><button class="btn" id="startStudyBtn" disabled>begin evaluation →</button></div>
+                    </div>
+                `;
+            }
+
+            function attachPidHandler() {
+                const pidInput = document.getElementById('educatorId');
+                const startBtn = document.getElementById('startStudyBtn');
+                pidInput.addEventListener('input', function(e) {
+                    startBtn.disabled = e.target.value.trim().length === 0;
+                });
+                startBtn.addEventListener('click', function() {
+                    educatorId = pidInput.value.trim();
+                    if (educatorId) {
+                        initSessionOrder();
+                        phase = 'AUDIO_PLAYBACK';
+                        render();
+                    }
+                });
+            }
+
+            function renderAudioPlayback(audioLetter) {
+                const audioSrc = currentAudioId === 'audio1' ? AUDIO_FILES.audio1 : AUDIO_FILES.audio2;
+                
+                return `
+                    <div class="content-card">
+                        <h2 style="font-weight:500; margin-bottom:0.3rem;">Environment Narration - Audio ${audioLetter}</h2>
+                        <p style="color:#3d637b; margin-bottom:1rem;">Play Audio ${audioLetter} and listen fully. You may replay or seek as needed.</p>
+                        
+                        <div class="audio-player">
+                            <audio id="audioElement" class="audio-element" controls>
+                                <source src="${audioSrc}" type="audio/wav">
+                                Your browser does not support the audio element.
+                            </audio>
+                            
+                            <div class="text-center">
+                                <span class="audio-status" id="audioStatus">Play audio</span>
+                            </div>
+                        </div>
+                        
+                        <div style="margin: 1.5rem 0 1rem;">
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="listenedCheck" disabled>
+                                <span>I confirm I listened fully to Audio ${audioLetter}. <span style="color:#af4c4c;">(required)</span></span>
+                            </label>
+                        </div>
+                        <div class="flex-btn"><button class="btn" id="continueAfterAudioBtn" disabled>continue to ratings →</button></div>
+                    </div>
+                `;
+            }
+
+            function attachAudioHandlers() {
+                const audioElement = document.getElementById('audioElement');
+                const listenedChk = document.getElementById('listenedCheck');
+                const continueBtn = document.getElementById('continueAfterAudioBtn');
+                
+                if (audioElement) {
+                    // Store reference
+                    window.currentAudioElement = audioElement;
+                    
+                    // Set up audio tracking
+                    setupAudioTracking(audioElement, currentAudioId);
+                    
+                    // Enable checkbox when audio ends or reaches near end
+                    audioElement.addEventListener('ended', function() {
+                        if (listenedChk) {
+                            listenedChk.disabled = false;
+                        }
+                    });
+                    
+                    audioElement.addEventListener('timeupdate', function() {
+                        if (audioElement.duration && (audioElement.currentTime / audioElement.duration) > 0.95) {
+                            if (listenedChk) {
+                                listenedChk.disabled = false;
+                            }
+                        }
+                    });
+                }
+
+                // Listened checkbox (required)
+                if (listenedChk) {
+                    listenedChk.addEventListener('change', function(e) {
+                        if (e.target.checked && continueBtn) {
+                            sessionData[currentAudioId].listened = true;
+                            continueBtn.disabled = false;
+                        } else if (continueBtn) {
+                            sessionData[currentAudioId].listened = false;
+                            continueBtn.disabled = true;
+                        }
+                    });
+                }
+
+                // Continue button
+                if (continueBtn) {
+                    continueBtn.addEventListener('click', function() {
+                        if (window.currentAudioElement) {
+                            window.currentAudioElement.pause();
+                        }
+                        phase = 'RATINGS';
+                        render();
+                    });
+                }
+            }
+
+            function renderRatings(audioLetter) {
+                let html = `
+                    <div class="content-card">
+                        <h3 style="margin-bottom:1.5rem;">Rate Audio ${audioLetter}</h3>
+                        <p style="color:#3a5c70; margin-bottom:1.2rem;">1 Strongly disagree · 2 Disagree · 3 Slightly disagree · 4 Neutral · 5 Slightly agree · 6 Agree · 7 Strongly agree</p>
+                `;
+                
+                EDUCATOR_RATING_ITEMS.forEach((item) => {
+                    html += `<div class="question-item">
+                        <div class="question-text">${item.text}</div>
+                        <div class="likert-scale" id="rating-${item.id}">`;
+                    for (let val = 1; val <= 7; val++) {
+                        html += `<label class="likert-item"><input type="radio" name="rating_${item.id}" value="${val}"> ${val}</label>`;
+                    }
+                    html += `</div></div>`;
+                });
+                
+                html += `<div class="flex-btn"><button class="btn" id="submitRatingsBtn">continue →</button></div>`;
+                html += `</div>`;
+                return html;
+            }
+
+            function attachRatingsHandler() {
+                document.getElementById('submitRatingsBtn')?.addEventListener('click', function() {
+                    let allSelected = true;
+                    EDUCATOR_RATING_ITEMS.forEach(item => {
+                        const radios = document.getElementsByName(`rating_${item.id}`);
+                        let selected = null;
+                        for (let r of radios) if (r.checked) { selected = r.value; break; }
+                        if (!selected) allSelected = false;
+                        else sessionData[currentAudioId].ratings[item.id] = Number(selected);
+                    });
+                    
+                    if (!allSelected) {
+                        alert('Please answer all rating items.');
+                        return;
+                    }
+
+                    // Move to next audio or comparative section
+                    if (currentSessionIndex === 0) {
+                        currentSessionIndex = 1;
+                        currentAudioId = sessionOrder[1];
+                        phase = 'AUDIO_PLAYBACK';
+                        render();
+                    } else {
+                        // After second audio, go to comparative section
+                        phase = 'COMPARATIVE';
+                        render();
+                    }
+                });
+            }
+
+            function renderComparative() {
+                return `
+                    <div class="content-card">
+                        <h3 style="margin-bottom:1.5rem;">Environment Comparative Evaluation</h3>
+                        
+                        <div class="question-item">
+                            <div class="question-text">ENV-C1. Which version is better for student attention?</div>
+                            <div class="radio-group">
+                                <label class="radio-opt"><input type="radio" name="env_c1" value="Audio A"> Audio A</label>
+                                <label class="radio-opt"><input type="radio" name="env_c1" value="Audio B"> Audio B</label>
+                                <label class="radio-opt"><input type="radio" name="env_c1" value="No difference"> No difference</label>
+                            </div>
+                        </div>
+                        
+                        <div class="question-item">
+                            <div class="question-text">ENV-C2. Which version is better for perceived understanding/retention?</div>
+                            <div class="radio-group">
+                                <label class="radio-opt"><input type="radio" name="env_c2" value="Audio A"> Audio A</label>
+                                <label class="radio-opt"><input type="radio" name="env_c2" value="Audio B"> Audio B</label>
+                                <label class="radio-opt"><input type="radio" name="env_c2" value="No difference"> No difference</label>
+                            </div>
+                        </div>
+                        
+                        <div class="question-item">
+                            <div class="question-text">ENV-C3. Which version is more appropriate for learning delivery?</div>
+                            <div class="radio-group">
+                                <label class="radio-opt"><input type="radio" name="env_c3" value="Audio A"> Audio A</label>
+                                <label class="radio-opt"><input type="radio" name="env_c3" value="Audio B"> Audio B</label>
+                                <label class="radio-opt"><input type="radio" name="env_c3" value="No difference"> No difference</label>
+                            </div>
+                        </div>
+                        
+                        <div class="question-item">
+                            <div class="question-text">ENV-C4. If you were to implement this, where does it fit best?</div>
+                            <div class="radio-group">
+                                <label class="radio-opt"><input type="radio" name="env_c4" value="Introduction"> Introduction</label>
+                                <label class="radio-opt"><input type="radio" name="env_c4" value="Core explanation"> Core explanation</label>
+                                <label class="radio-opt"><input type="radio" name="env_c4" value="Reinforcement/recap"> Reinforcement/recap</label>
+                                <label class="radio-opt"><input type="radio" name="env_c4" value="Homework/self-study"> Homework/self-study</label>
+                                <label class="radio-opt"><input type="radio" name="env_c4" value="Assessment support"> Assessment support</label>
+                            </div>
+                        </div>
+                        
+                        <div class="question-item">
+                            <div class="question-text">ENV-C5. Recommended duration for students for this topic</div>
+                            <div class="radio-group">
+                                <label class="radio-opt"><input type="radio" name="env_c5" value="1-2 min"> 1–2 min</label>
+                                <label class="radio-opt"><input type="radio" name="env_c5" value="2-3 min"> 2–3 min</label>
+                                <label class="radio-opt"><input type="radio" name="env_c5" value="3-5 min"> 3–5 min</label>
+                                <label class="radio-opt"><input type="radio" name="env_c5" value="5-7 min"> 5–7 min</label>
+                            </div>
+                        </div>
+                        
+                        <div class="question-item">
+                            <div class="question-text">ENV-C6. What instructions should students receive before listening? (3–5 lines)</div>
+                            <textarea id="env_c6" class="text-input" rows="4" placeholder="Type your answer here..." required></textarea>
+                        </div>
+                        
+                        <div class="question-item">
+                            <div class="question-text">ENV-C7. What risks/constraints do you anticipate and how to mitigate them? (4–6 lines)</div>
+                            <p style="color:#3d637b; margin-bottom:0.5rem; font-size:0.9rem;">Examples: mixed headphone quality, noisy rooms, students using speakers, attention drift</p>
+                            <textarea id="env_c7" class="text-input" rows="5" placeholder="Type your answer here..." required></textarea>
+                        </div>
+                        
+                        <div class="question-item">
+                            <div class="question-text">ENV-C8. Briefly justify why you preferred A or B (2–4 lines)</div>
+                            <textarea id="env_c8" class="text-input" rows="3" placeholder="Type your answer here..." required></textarea>
+                        </div>
+                        
+                        <div class="flex-btn"><button class="btn" id="submitComparativeBtn">Submit Evaluation</button></div>
+                    </div>
+                `;
+            }
+
+            function attachComparativeHandler() {
+                document.getElementById('submitComparativeBtn')?.addEventListener('click', function() {
+                    // Validate all radio selections
+                    const c1Radios = document.getElementsByName('env_c1');
+                    const c2Radios = document.getElementsByName('env_c2');
+                    const c3Radios = document.getElementsByName('env_c3');
+                    const c4Radios = document.getElementsByName('env_c4');
+                    const c5Radios = document.getElementsByName('env_c5');
+                    
+                    let c1Selected = false, c2Selected = false, c3Selected = false, c4Selected = false, c5Selected = false;
+                    
+                    for (let r of c1Radios) if (r.checked) { c1Selected = true; comparativeData.env_c1 = r.value; break; }
+                    for (let r of c2Radios) if (r.checked) { c2Selected = true; comparativeData.env_c2 = r.value; break; }
+                    for (let r of c3Radios) if (r.checked) { c3Selected = true; comparativeData.env_c3 = r.value; break; }
+                    for (let r of c4Radios) if (r.checked) { c4Selected = true; comparativeData.env_c4 = r.value; break; }
+                    for (let r of c5Radios) if (r.checked) { c5Selected = true; comparativeData.env_c5 = r.value; break; }
+                    
+                    if (!c1Selected || !c2Selected || !c3Selected || !c4Selected || !c5Selected) {
+                        alert('Please answer all multiple choice questions (ENV-C1 through ENV-C5).');
+                        return;
+                    }
+                    
+                    // Validate text fields
+                    const c6 = document.getElementById('env_c6')?.value.trim();
+                    const c7 = document.getElementById('env_c7')?.value.trim();
+                    const c8 = document.getElementById('env_c8')?.value.trim();
+                    
+                    if (!c6) {
+                        alert('Please provide instructions for students (ENV-C6).');
+                        return;
+                    }
+                    
+                    if (!c7) {
+                        alert('Please describe anticipated risks and mitigations (ENV-C7).');
+                        return;
+                    }
+                    
+                    if (!c8) {
+                        alert('Please justify your preference (ENV-C8).');
+                        return;
+                    }
+                    
+                    comparativeData.env_c6 = c6;
+                    comparativeData.env_c7 = c7;
+                    comparativeData.env_c8 = c8;
+                    
+                    phase = 'COMPLETED';
+                    render();
+                });
+            }
+
+            function renderSubmitScreen() {
+                return `
+                    <div class="content-card text-center">
+                        <h2>Loading Topic 2</h2>
+                        <div class="loader"></div>
+                        <p style="margin-top:1.2rem; color:#2e6279;">Saving educator responses...</p>
+                    </div>
+                `;
+            }
+
+            function buildSheetRow() {
+                return {
+                    // Participant info
+                    educator_id: educatorId,
+                    session_order: sessionOrder.join('|'),
+                    timestamp: new Date().toISOString(),
+                    
+                    // Audio 1 data
+                    audio1_listened: sessionData.audio1.listened ? 'yes' : 'no',
+                    audio1_rating_clarity: sessionData.audio1.ratings.clarity || '',
+                    audio1_rating_engagement: sessionData.audio1.ratings.engagement || '',
+                    audio1_rating_learning_support: sessionData.audio1.ratings.learning_support || '',
+                    audio1_rating_appropriateness: sessionData.audio1.ratings.appropriateness || '',
+                    audio1_rating_cognitive_load: sessionData.audio1.ratings.cognitive_load || '',
+                    audio1_rating_distraction_risk: sessionData.audio1.ratings.distraction_risk || '',
+                    audio1_rating_feasibility: sessionData.audio1.ratings.feasibility || '',
+                    
+                    // Audio 2 data
+                    audio2_listened: sessionData.audio2.listened ? 'yes' : 'no',
+                    audio2_rating_clarity: sessionData.audio2.ratings.clarity || '',
+                    audio2_rating_engagement: sessionData.audio2.ratings.engagement || '',
+                    audio2_rating_learning_support: sessionData.audio2.ratings.learning_support || '',
+                    audio2_rating_appropriateness: sessionData.audio2.ratings.appropriateness || '',
+                    audio2_rating_cognitive_load: sessionData.audio2.ratings.cognitive_load || '',
+                    audio2_rating_distraction_risk: sessionData.audio2.ratings.distraction_risk || '',
+                    audio2_rating_feasibility: sessionData.audio2.ratings.feasibility || '',
+                    
+                    // Comparative data
+                    env_c1: comparativeData.env_c1 || '',
+                    env_c2: comparativeData.env_c2 || '',
+                    env_c3: comparativeData.env_c3 || '',
+                    env_c4: comparativeData.env_c4 || '',
+                    env_c5: comparativeData.env_c5 || '',
+                    env_c6: comparativeData.env_c6 || '',
+                    env_c7: comparativeData.env_c7 || '',
+                    env_c8: comparativeData.env_c8 || ''
+                };
+            }
+
+            function submitAllData() {
+                const row = buildSheetRow();
+                fetch(SHEETDB_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: [row] })
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error('HTTP error ' + res.status);
+                    return res.json();
+                })
+                .then(() => {
+                    setTimeout(() => { window.location.href = REDIRECT_URL; }, 2000);
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Upload failed. Please refresh and try again.');
+                });
+            }
+
+            // start
+            phase = 'PID_ENTRY';
+            render();
+        })();
+    </script>
 </body>
 </html>
