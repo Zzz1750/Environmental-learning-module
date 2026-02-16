@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Workflow 1</title>
+    <title>Topic 1</title>
     <!-- fonts & clean style -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -628,7 +628,7 @@ html {
                 if (!container) return;
 
                 if (phase === 'PID_ENTRY') {
-                    headingEl.innerText = 'Workflow 1';
+                    headingEl.innerText = 'Topic 1';
                     phaseBadge.innerText = 'start';
                     sessionLabel.innerText = 'enter your ID';
                     container.innerHTML = renderPidEntry();
@@ -637,7 +637,7 @@ html {
                 }
 
                 if (phase === 'ENVIRONMENT') {
-                    headingEl.innerText = 'final questions';
+                    headingEl.innerText = 'Semi Structured Interview';
                     phaseBadge.innerText = 'environment';
                     sessionLabel.innerText = `ID: ${participantId}`;
                     container.innerHTML = renderEnvironment();
@@ -960,17 +960,17 @@ html {
             function renderEnvironment() {
                 return `
                     <div class="content-card">
-                        <h3 style="margin-bottom:1.5rem;">Semi structured interview instead of final questions</h3>
+                        <h3 style="margin-bottom:1.5rem;">Interview Prompts</h3>
                         <p style="color:#3a5c70; margin-bottom:1.5rem;">Please answer briefly. Your responses help us understand your experience.</p>
                         
                         <div class="question-item">
                             <div class="question-text">ENV-IV1 (3–5 lines): What felt different between the two audio versions in this Environment section?</div>
-                            <textarea id="env_iv1" class="text-input" rows="4" placeholder="Type your answer here..."></textarea>
+                            <textarea id="env_iv1" class="text-input" rows="4" placeholder="Type your answer here..." required></textarea>
                         </div>
                         
                         <div class="question-item">
                             <div class="question-text">ENV-IV2 (2–4 lines): Which sound elements helped your focus or distracted you? (Examples: traffic hum, drain water, bin sounds, footsteps)</div>
-                            <textarea id="env_iv2" class="text-input" rows="3" placeholder="Type your answer here..."></textarea>
+                            <textarea id="env_iv2" class="text-input" rows="3" placeholder="Type your answer here..." required></textarea>
                         </div>
                         
                         <div class="question-item">
@@ -982,7 +982,7 @@ html {
                         </div>
                         
                         <div class="question-item" id="env_iv3a_container" style="display:none;">
-                            <div class="question-text">ENV-IV3_1: Describe the issue briefly (1–2 lines)</div>
+                            <div class="question-text">ENV-IV3_1: Describe the issue if there is any (1–2 lines)</div>
                             <textarea id="env_iv3a" class="text-input" rows="2" placeholder="Type your answer here..."></textarea>
                         </div>
                         
@@ -1057,7 +1057,7 @@ html {
             function renderSubmitScreen() {
                 return `
                     <div class="content-card text-center">
-                        <h2>Loading Workflow 2</h2>
+                        <h2>Loading Topic 2</h2>
                         <div class="loader"></div>
                         <p style="margin-top:1.2rem; color:#2e6279;">Saving responses...</p>
                     </div>
