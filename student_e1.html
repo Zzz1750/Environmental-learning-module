@@ -486,6 +486,18 @@ html {
         padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
     }
 }
+
+/* Instruction text style */
+.instruction-text {
+    font-size: 0.95rem;
+    color: #3d637b;
+    background: #e9f0f7;
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #1b5f7c;
+    line-height: 1.5;
+}
     </style>
 </head>
 <body>
@@ -859,7 +871,11 @@ html {
 
             function renderComprehension() {
                 const questions = COMP_QUESTIONS[currentAudioId];
-                let html = `<div class="content-card"><h3 style="margin-bottom:1.2rem;">Comprehension check</h3>`;
+                let html = `<div class="content-card">
+                    <h3 style="margin-bottom:0.8rem;">Comprehension check</h3>
+                    <div class="instruction-text">
+                        <strong>Instruction:</strong> Answer based only on the narration you listened to. These questions check overall understanding of the Environment narration.
+                    </div>`;
                 questions.forEach((q, idx) => {
                     html += `<div class="question-item" data-qidx="${idx}">
                         <div class="question-text">${q.q}</div>`;
@@ -944,7 +960,7 @@ html {
             function renderEnvironment() {
                 return `
                     <div class="content-card">
-                        <h3 style="margin-bottom:1.5rem;">MINI SEMI-STRUCTURED Questions</h3>
+                        <h3 style="margin-bottom:1.5rem;">Semi structured interview instead of final questions</h3>
                         <p style="color:#3a5c70; margin-bottom:1.5rem;">Please answer briefly. Your responses help us understand your experience.</p>
                         
                         <div class="question-item">
@@ -1041,7 +1057,7 @@ html {
             function renderSubmitScreen() {
                 return `
                     <div class="content-card text-center">
-                        <h2>Uploading</h2>
+                        <h2>Loading Workflow 2</h2>
                         <div class="loader"></div>
                         <p style="margin-top:1.2rem; color:#2e6279;">Saving responses...</p>
                     </div>

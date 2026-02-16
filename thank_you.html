@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Thank You - Audio Experiment</title>
+    <!-- fonts & clean style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="./images/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="./images/favicon.svg" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #eef3f7;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            color: #1e3648;
+            line-height: 1.5;
+        }
+
+        .thankyou-container {
+            width: 100%;
+            max-width: 550px;
+            background: white;
+            border-radius: 2.5rem;
+            box-shadow: 0 20px 40px -12px rgba(0, 35, 55, 0.25);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: padding 0.2s;
+        }
+
+        @media (max-width: 480px) {
+            .thankyou-container {
+                padding: 2rem 1.5rem;
+                border-radius: 2rem;
+            }
+        }
+
+        .checkmark-circle {
+            width: 90px;
+            height: 90px;
+            background: #1b5f7c;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.8rem;
+            box-shadow: 0 8px 18px rgba(27, 95, 124, 0.25);
+        }
+
+        .checkmark {
+            color: white;
+            font-size: 3.5rem;
+            line-height: 1;
+            font-weight: 400;
+        }
+
+        h1 {
+            font-weight: 600;
+            font-size: 2.2rem;
+            letter-spacing: -0.02em;
+            color: #113946;
+            margin-bottom: 0.8rem;
+            line-height: 1.2;
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.9rem;
+            }
+        }
+
+        .message {
+            font-size: 1.2rem;
+            color: #3d637b;
+            margin-bottom: 2rem;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #cbdbe9, transparent);
+            margin: 2rem 0;
+        }
+
+        .contribution {
+            background: #f0f7fd;
+            border-radius: 2rem;
+            padding: 1.5rem 1.2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #d0e0ed;
+        }
+
+        .contribution p {
+            color: #1b5777;
+            font-size: 1.05rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .contribution-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .closing {
+            color: #517a8c;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .btn {
+            background: #1b5f7c;
+            border: none;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            border: 1px solid #134f69;
+            box-shadow: 0 4px 8px rgba(0, 50, 70, 0.12);
+            display: inline-block;
+            text-align: center;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 52px;
+            text-decoration: none;
+            margin-top: 1rem;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+            background: #134f69;
+        }
+
+        .footer-note {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #88a0b3;
+        }
+
+        /* Add safe area insets for modern phones */
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: max(1rem, env(safe-area-inset-left));
+                padding-right: max(1rem, env(safe-area-inset-right));
+                padding-top: max(1rem, env(safe-area-inset-top));
+                padding-bottom: max(1rem, env(safe-area-inset-bottom));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="thankyou-container">
+        <div class="checkmark-circle">
+            <span class="checkmark">✓</span>
+        </div>
+        
+        <h1>Thank You!</h1>
+        
+        <div class="message">
+            You have completed the audio experiment.
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="contribution">
+            <p><strong>Your contribution matters.</strong></p>
+            <p>Thank you for your time and effort towards immersive audio research.</p>
+        </div>
+        
+        <p class="closing">Your responses have been recorded successfully.</p>
+        
+        <!-- Optional button (can be removed or modified) -->
+        <div>
+            <button class="btn" onclick="window.close()">close this window</button>
+        </div>
+        
+        <div class="footer-note">
+            immersive audio research · © 2026
+        </div>
+    </div>
+
+    <script>
+        // Simple script to handle the close button - falls back if window.close() is not allowed
+        document.querySelector('.btn')?.addEventListener('click', function() {
+            // Try to close the window
+            try {
+                window.close();
+            } catch(e) {
+                // If cannot close, show a message or do nothing
+                alert('Please close this tab manually.');
+            }
+        });
+    </script>
+</body>
+</html>
