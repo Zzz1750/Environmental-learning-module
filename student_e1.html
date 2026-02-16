@@ -164,7 +164,7 @@ h1 {
     border: 1px solid #c0d4e5;
 }
 
-/* Waveform visualization (optional, just for aesthetics) */
+/* Waveform visualization */
 .audio-waveform {
     display: flex;
     align-items: center;
@@ -179,13 +179,23 @@ h1 {
     height: 20px;
     background: #9bb6cc;
     border-radius: 4px;
+    /* Animation removed by default - will be added via JS when playing */
+    transition: height 0.2s ease;
+}
+
+.audio-waveform.playing span {
     animation: waveform 1s ease-in-out infinite;
 }
 
-.audio-waveform span:nth-child(2) { height: 30px; animation-delay: 0.1s; }
-.audio-waveform span:nth-child(3) { height: 40px; animation-delay: 0.2s; }
-.audio-waveform span:nth-child(4) { height: 30px; animation-delay: 0.3s; }
-.audio-waveform span:nth-child(5) { height: 20px; animation-delay: 0.4s; }
+.audio-waveform span:nth-child(2) { height: 30px; }
+.audio-waveform span:nth-child(3) { height: 40px; }
+.audio-waveform span:nth-child(4) { height: 30px; }
+.audio-waveform span:nth-child(5) { height: 20px; }
+
+.audio-waveform.playing span:nth-child(2) { animation-delay: 0.1s; }
+.audio-waveform.playing span:nth-child(3) { animation-delay: 0.2s; }
+.audio-waveform.playing span:nth-child(4) { animation-delay: 0.3s; }
+.audio-waveform.playing span:nth-child(5) { animation-delay: 0.4s; }
 
 @keyframes waveform {
     0%, 100% { transform: scaleY(0.8); opacity: 0.5; }
@@ -244,6 +254,25 @@ h1 {
     padding: 0.75rem 1.2rem;
     font-size: 1rem;
     min-height: 44px;
+}
+
+/* Text input styling */
+.text-input {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    border: 2px solid #cee0ec;
+    border-radius: 20px;
+    margin: 0.5rem 0 1rem;
+    font-family: 'Inter', sans-serif;
+    background: white;
+    resize: vertical;
+    min-height: 100px;
+}
+
+.text-input:focus {
+    outline: none;
+    border-color: #1b5f7c;
 }
 
 .question-item {
@@ -542,6 +571,14 @@ html {
                 audio2: { ratings: {}, comp: {}, listened: false }
             };
 
+            // Environment section data
+            let environmentData = {
+                env_iv1: '',
+                env_iv2: '',
+                env_iv3: '',
+                env_iv3a: ''
+            };
+
             // ---------- helpers ----------
             function shuffle(arr) {
                 for (let i = arr.length - 1; i > 0; i--) {
@@ -555,6 +592,18 @@ html {
                 sessionOrder = shuffle(['audio1', 'audio2']);
                 currentSessionIndex = 0;
                 currentAudioId = sessionOrder[0];
+            }
+
+            // Function to update waveform animation based on playback state
+            function updateWaveformAnimation(playing) {
+                const waveform = document.querySelector('.audio-waveform');
+                if (waveform) {
+                    if (playing) {
+                        waveform.classList.add('playing');
+                    } else {
+                        waveform.classList.remove('playing');
+                    }
+                }
             }
 
             // ---------- render ----------
@@ -572,6 +621,15 @@ html {
                     sessionLabel.innerText = 'enter your ID';
                     container.innerHTML = renderPidEntry();
                     attachPidHandler();
+                    return;
+                }
+
+                if (phase === 'ENVIRONMENT') {
+                    headingEl.innerText = 'final questions';
+                    phaseBadge.innerText = 'environment';
+                    sessionLabel.innerText = `ID: ${participantId}`;
+                    container.innerHTML = renderEnvironment();
+                    attachEnvironmentHandler();
                     return;
                 }
 
@@ -702,6 +760,7 @@ html {
                 audioElement.addEventListener('ended', function() {
                     isAudioPlaying = false;
                     audioEnded = true;
+                    updateWaveformAnimation(false); // Stop waveform animation
                     if (playBtn) playBtn.disabled = false;
                     if (pauseBtn) pauseBtn.disabled = true;
                     if (listenedChk) {
@@ -717,6 +776,7 @@ html {
                     playBtn.addEventListener('click', function() {
                         audioElement.play();
                         isAudioPlaying = true;
+                        updateWaveformAnimation(true); // Start waveform animation
                         playBtn.disabled = true;
                         pauseBtn.disabled = false;
                     });
@@ -727,6 +787,7 @@ html {
                     pauseBtn.addEventListener('click', function() {
                         audioElement.pause();
                         isAudioPlaying = false;
+                        updateWaveformAnimation(false); // Stop waveform animation
                         playBtn.disabled = false;
                         pauseBtn.disabled = true;
                     });
@@ -835,7 +896,8 @@ html {
                         phase = 'WASHOUT';
                         render();
                     } else {
-                        phase = 'COMPLETED';
+                        // After second audio, go to Environment section
+                        phase = 'ENVIRONMENT';
                         render();
                     }
                 });
@@ -879,6 +941,103 @@ html {
                 }, { once: true });
             }
 
+            function renderEnvironment() {
+                return `
+                    <div class="content-card">
+                        <h3 style="margin-bottom:1.5rem;">MINI SEMI-STRUCTURED Questions</h3>
+                        <p style="color:#3a5c70; margin-bottom:1.5rem;">Please answer briefly. Your responses help us understand your experience.</p>
+                        
+                        <div class="question-item">
+                            <div class="question-text">ENV-IV1 (3–5 lines): What felt different between the two audio versions in this Environment section?</div>
+                            <textarea id="env_iv1" class="text-input" rows="4" placeholder="Type your answer here..."></textarea>
+                        </div>
+                        
+                        <div class="question-item">
+                            <div class="question-text">ENV-IV2 (2–4 lines): Which sound elements helped your focus or distracted you? (Examples: traffic hum, drain water, bin sounds, footsteps)</div>
+                            <textarea id="env_iv2" class="text-input" rows="3" placeholder="Type your answer here..."></textarea>
+                        </div>
+                        
+                        <div class="question-item">
+                            <div class="question-text">ENV-IV3: Any discomfort (headache/ear strain/fatigue)?</div>
+                            <div class="radio-group" id="discomfortRadio">
+                                <label class="radio-opt"><input type="radio" name="env_iv3" value="Yes"> Yes</label>
+                                <label class="radio-opt"><input type="radio" name="env_iv3" value="No"> No</label>
+                            </div>
+                        </div>
+                        
+                        <div class="question-item" id="env_iv3a_container" style="display:none;">
+                            <div class="question-text">ENV-IV3_1: Describe the issue briefly (1–2 lines)</div>
+                            <textarea id="env_iv3a" class="text-input" rows="2" placeholder="Type your answer here..."></textarea>
+                        </div>
+                        
+                        <div class="flex-btn"><button class="btn" id="submitEnvironmentBtn">Submit Environment Section</button></div>
+                    </div>
+                `;
+            }
+
+            function attachEnvironmentHandler() {
+                const discomfortRadios = document.getElementsByName('env_iv3');
+                const iv3aContainer = document.getElementById('env_iv3a_container');
+                
+                // Show/hide iv3a based on discomfort selection
+                discomfortRadios.forEach(radio => {
+                    radio.addEventListener('change', function(e) {
+                        if (e.target.value === 'Yes') {
+                            iv3aContainer.style.display = 'block';
+                        } else {
+                            iv3aContainer.style.display = 'none';
+                        }
+                    });
+                });
+
+                document.getElementById('submitEnvironmentBtn')?.addEventListener('click', function() {
+                    // Validate required fields
+                    const iv1 = document.getElementById('env_iv1')?.value.trim();
+                    const iv2 = document.getElementById('env_iv2')?.value.trim();
+                    
+                    let discomfortSelected = null;
+                    for (let r of discomfortRadios) {
+                        if (r.checked) {
+                            discomfortSelected = r.value;
+                            break;
+                        }
+                    }
+
+                    if (!iv1) {
+                        alert('Please answer ENV-IV1.');
+                        return;
+                    }
+                    
+                    if (!iv2) {
+                        alert('Please answer ENV-IV2.');
+                        return;
+                    }
+                    
+                    if (!discomfortSelected) {
+                        alert('Please select Yes or No for discomfort.');
+                        return;
+                    }
+
+                    // Validate iv3a if discomfort is Yes
+                    if (discomfortSelected === 'Yes') {
+                        const iv3a = document.getElementById('env_iv3a')?.value.trim();
+                        if (!iv3a) {
+                            alert('Please describe the discomfort briefly.');
+                            return;
+                        }
+                        environmentData.env_iv3a = iv3a;
+                    }
+
+                    // Store environment data
+                    environmentData.env_iv1 = iv1;
+                    environmentData.env_iv2 = iv2;
+                    environmentData.env_iv3 = discomfortSelected;
+
+                    phase = 'COMPLETED';
+                    render();
+                });
+            }
+
             function renderSubmitScreen() {
                 return `
                     <div class="content-card text-center">
@@ -891,8 +1050,12 @@ html {
 
             function buildSheetRow() {
                 return {
+                    // Participant info
                     participant_id: participantId,
                     session_order: sessionOrder.join('|'),
+                    timestamp: new Date().toISOString(),
+                    
+                    // Audio 1 data
                     audio1_listened: sessionData.audio1.listened ? 'yes' : 'no',
                     audio1_rating_att: sessionData.audio1.ratings.att || '',
                     audio1_rating_clarity: sessionData.audio1.ratings.clarity || '',
@@ -902,6 +1065,8 @@ html {
                     audio1_comp_q2: sessionData.audio1.comp?.q2 || '',
                     audio1_comp_q3: sessionData.audio1.comp?.q3 || '',
                     audio1_comp_q4: sessionData.audio1.comp?.q4 || '',
+                    
+                    // Audio 2 data
                     audio2_listened: sessionData.audio2.listened ? 'yes' : 'no',
                     audio2_rating_att: sessionData.audio2.ratings.att || '',
                     audio2_rating_clarity: sessionData.audio2.ratings.clarity || '',
@@ -911,7 +1076,12 @@ html {
                     audio2_comp_q2: sessionData.audio2.comp?.q2 || '',
                     audio2_comp_q3: sessionData.audio2.comp?.q3 || '',
                     audio2_comp_q4: sessionData.audio2.comp?.q4 || '',
-                    timestamp: new Date().toISOString()
+                    
+                    // Environment section data
+                    env_iv1: environmentData.env_iv1 || '',
+                    env_iv2: environmentData.env_iv2 || '',
+                    env_iv3: environmentData.env_iv3 || '',
+                    env_iv3a: environmentData.env_iv3a || ''
                 };
             }
 
