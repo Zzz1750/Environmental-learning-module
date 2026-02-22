@@ -518,41 +518,41 @@ html {
 
             // Audio file paths
             const AUDIO_FILES = {
-                audio1: 'e1_1.wav',
-                audio2: 'e1_2.wav'
+                audio1: 'e2_1.wav',
+                audio2: 'e2_2.wav'
             };
 
             const COMP_QUESTIONS = {
                 audio1: [
                     { q: "PD-CC1. In the narration, “life skills” are described as:",
-                      options: ["A) Skills only for sports and fitness", "B) Abilities for adopting positive behaviour to deal effectively with demands and challenges of everyday life", "C) Techniques used only in examinations", "D) Talents someone is born with"] },
+                    options: ["A) Skills only for sports and fitness", "B) Abilities for adopting positive behaviour to deal effectively with demands and challenges of everyday life", "C) Techniques used only in examinations", "D) Talents someone is born with"] },
                     { q: "PD-CC2. The narration describes self-awareness mainly as:",
-                      options: ["A) Winning arguments by speaking louder",
+                    options: ["A) Winning arguments by speaking louder",
                                 "B) Recognising strengths/weaknesses, likes/dislikes, skills, and noticing your internal state in real time",
                                 "C) Copying confident people in the group",
                                 "D) Avoiding group discussions"] },
                     { q: "PD-CC3. Which option best matches what the narration says about critical thinking in group situations?",
-                      options: ["A) Accept information quickly to save time", "B) Analyse information objectively and recognise influences like media and peer pressure before acting",
+                    options: ["A) Accept information quickly to save time", "B) Analyse information objectively and recognise influences like media and peer pressure before acting",
                                 "C) Always follow the majority opinion", "D) Ignore rumours only if they are negative"] },
                     { q: "PD-CC4. The narration mentions two simple stress-reset strategies. Which pair matches?",
-                      options: ["A) Fast breathing and loud music",
+                    options: ["A) Fast breathing and loud music",
                                 "B) Deep, slow breathing and imagining a quiet place while focusing on details (including pleasant sounds)",
                                 "C) Skipping sleep and drinking caffeine",
                                 "D) Arguing to release emotions"] }
                 ],
                 audio2: [
-                   { q: "PD-CC1. In the narration, “life skills” are described as:",
-                      options: ["A) Skills only for sports and fitness", "B) Abilities for adopting positive behaviour to deal effectively with demands and challenges of everyday life", "C) Techniques used only in examinations", "D) Talents someone is born with"] },
+                { q: "PD-CC1. In the narration, “life skills” are described as:",
+                    options: ["A) Skills only for sports and fitness", "B) Abilities for adopting positive behaviour to deal effectively with demands and challenges of everyday life", "C) Techniques used only in examinations", "D) Talents someone is born with"] },
                     { q: "PD-CC2. The narration describes self-awareness mainly as:",
-                      options: ["A) Winning arguments by speaking louder",
+                    options: ["A) Winning arguments by speaking louder",
                                 "B) Recognising strengths/weaknesses, likes/dislikes, skills, and noticing your internal state in real time",
                                 "C) Copying confident people in the group",
                                 "D) Avoiding group discussions"] },
                     { q: "PD-CC3. Which option best matches what the narration says about critical thinking in group situations?",
-                      options: ["A) Accept information quickly to save time", "B) Analyse information objectively and recognise influences like media and peer pressure before acting",
+                    options: ["A) Accept information quickly to save time", "B) Analyse information objectively and recognise influences like media and peer pressure before acting",
                                 "C) Always follow the majority opinion", "D) Ignore rumours only if they are negative"] },
                     { q: "PD-CC4. The narration mentions two simple stress-reset strategies. Which pair matches?",
-                      options: ["A) Fast breathing and loud music",
+                    options: ["A) Fast breathing and loud music",
                                 "B) Deep, slow breathing and imagining a quiet place while focusing on details (including pleasant sounds)",
                                 "C) Skipping sleep and drinking caffeine",
                                 "D) Arguing to release emotions"] }
@@ -577,6 +577,12 @@ html {
             let audioElement = null;
             let isAudioPlaying = false;
             let audioEnded = false;
+
+            // audio loading tracking
+            let loadedAudioCount = 0;
+            const totalAudioFiles = 2;
+            let audio1Preload = null;
+            let audio2Preload = null;
 
             let sessionData = {
                 audio1: { ratings: {}, comp: {}, listened: false },
@@ -616,6 +622,88 @@ html {
                         waveform.classList.remove('playing');
                     }
                 }
+            }
+
+            // ---------- AUDIO PRELOAD (loading screen) ----------
+            function startPreloadAndThen(callback) {
+                // Show loading screen inside dynamicContent
+                const container = document.getElementById('dynamicContent');
+                const headingEl = document.getElementById('mainHeading');
+                const phaseBadge = document.getElementById('phaseBadge');
+                const sessionLabel = document.getElementById('sessionLabel');
+                
+                headingEl.innerText = 'Topic 2';
+                phaseBadge.innerText = 'loading';
+                sessionLabel.innerText = 'preparing audio';
+                
+                container.innerHTML = `
+                    <div class="loading-screen">
+                        <div class="loader"></div>
+                        <div class="loading-progress-text" id="loadingProgress">0%</div>
+                        <div class="loading-sub">loading large audio files … please wait</div>
+                        <p style="margin-top:1.5rem; font-size:0.9rem; color:#4f6f85;">this may take a moment on slower connections</p>
+                    </div>
+                `;
+                
+                const progressEl = document.getElementById('loadingProgress');
+                
+                // preload both audios using XMLHttpRequest to track progress
+                function loadAudio(key, fileUrl) {
+                    return new Promise((resolve, reject) => {
+                        const xhr = new XMLHttpRequest();
+                        xhr.open('GET', fileUrl, true);
+                        xhr.responseType = 'blob';
+                        
+                        xhr.onprogress = (e) => {
+                            if (e.lengthComputable) {
+                                // overall progress approximation: (loaded for this file / total size) but we don't know total combined size easily.
+                                // Instead we show a simple increment after each file is fully loaded.
+                                // We'll just update on load complete for simplicity.
+                            }
+                        };
+                        
+                        xhr.onload = () => {
+                            if (xhr.status === 200 || xhr.status === 0) {
+                                const blob = xhr.response;
+                                // Create object URL and store in audio element
+                                const audio = new Audio();
+                                audio.src = URL.createObjectURL(blob);
+                                // store for later use
+                                if (key === 'audio1') audio1Preload = audio;
+                                else audio2Preload = audio;
+                                
+                                loadedAudioCount++;
+                                if (progressEl) {
+                                    progressEl.innerText = Math.round((loadedAudioCount / totalAudioFiles) * 100) + '%';
+                                }
+                                resolve(audio);
+                            } else {
+                                reject(new Error(`Failed to load ${fileUrl}`));
+                            }
+                        };
+                        xhr.onerror = () => reject(new Error(`Network error loading ${fileUrl}`));
+                        xhr.send();
+                    });
+                }
+
+                Promise.all([
+                    loadAudio('audio1', AUDIO_FILES.audio1),
+                    loadAudio('audio2', AUDIO_FILES.audio2)
+                ]).then(([audio1, audio2]) => {
+                    // all loaded – slight delay to show 100%
+                    setTimeout(() => {
+                        callback(); // proceed to PID entry
+                    }, 500);
+                }).catch(err => {
+                    console.warn('Preload failed, falling back to normal loading', err);
+                    // fallback: create empty audio elements (will load on play)
+                    audio1Preload = new Audio(AUDIO_FILES.audio1);
+                    audio2Preload = new Audio(AUDIO_FILES.audio2);
+                    // still continue
+                    setTimeout(() => {
+                        callback();
+                    }, 500);
+                });
             }
 
             // ---------- render ----------
@@ -668,7 +756,7 @@ html {
                 } else if (phase === 'COMPREHENSION') {
                     container.innerHTML = renderComprehension();
                     attachCompHandler();
-                     setTimeout(() => {
+                    setTimeout(() => {
                         window.scrollTo({
                             top: 0,
                             behavior: 'smooth'
@@ -745,9 +833,18 @@ html {
             }
 
             function attachAudioHandlers() {
-                // Create audio element
-                const audioSrc = currentAudioId === 'audio1' ? AUDIO_FILES.audio1 : AUDIO_FILES.audio2;
-                audioElement = new Audio(audioSrc);
+                // Use preloaded audio if available, else create new one
+                if (currentAudioId === 'audio1' && audio1Preload) {
+                    audioElement = audio1Preload;
+                    audio1Preload = null; 
+                } else if (currentAudioId === 'audio2' && audio2Preload) {
+                    audioElement = audio2Preload;
+                    audio2Preload = null;
+                } else {
+                    // fallback (should not happen)
+                    const audioSrc = currentAudioId === 'audio1' ? AUDIO_FILES.audio1 : AUDIO_FILES.audio2;
+                    audioElement = new Audio(audioSrc);
+                }
                 
                 const playBtn = document.getElementById('playBtn');
                 const pauseBtn = document.getElementById('pauseBtn');
@@ -777,10 +874,8 @@ html {
                     if (pauseBtn) pauseBtn.disabled = true;
                     if (listenedChk) {
                         listenedChk.disabled = false;
-                        // Gentle notification instead of alert
                         if (progressEl) progressEl.textContent = '✓ Audio complete';
                     }
-                    if (progressEl) progressEl.textContent = '✓';
                 });
 
                 // Play button
@@ -995,19 +1090,22 @@ html {
                 const discomfortRadios = document.getElementsByName('env_iv3');
                 const iv3aContainer = document.getElementById('env_iv3a_container');
                 
-                // Show/hide iv3a based on discomfort selection
                 discomfortRadios.forEach(radio => {
                     radio.addEventListener('change', function(e) {
                         if (e.target.value === 'Yes') {
                             iv3aContainer.style.display = 'block';
+                            // Clear any previous value when showing
+                            document.getElementById('env_iv3a').value = '';
                         } else {
                             iv3aContainer.style.display = 'none';
+                            // Clear the value when hiding
+                            environmentData.env_iv3a = '';
+                            document.getElementById('env_iv3a').value = '';
                         }
                     });
                 });
 
                 document.getElementById('submitEnvironmentBtn')?.addEventListener('click', function() {
-                    // Validate required fields
                     const iv1 = document.getElementById('env_iv1')?.value.trim();
                     const iv2 = document.getElementById('env_iv2')?.value.trim();
                     
@@ -1034,7 +1132,12 @@ html {
                         return;
                     }
 
-                    // Validate iv3a if discomfort is Yes
+                    // Save environment data
+                    environmentData.env_iv1 = iv1;
+                    environmentData.env_iv2 = iv2;
+                    environmentData.env_iv3 = discomfortSelected;
+
+                    // Handle env_iv3a based on discomfort selection
                     if (discomfortSelected === 'Yes') {
                         const iv3a = document.getElementById('env_iv3a')?.value.trim();
                         if (!iv3a) {
@@ -1042,12 +1145,10 @@ html {
                             return;
                         }
                         environmentData.env_iv3a = iv3a;
+                    } else {
+                        // Explicitly set to empty string when "No" is selected
+                        environmentData.env_iv3a = '';
                     }
-
-                    // Store environment data
-                    environmentData.env_iv1 = iv1;
-                    environmentData.env_iv2 = iv2;
-                    environmentData.env_iv3 = discomfortSelected;
 
                     phase = 'COMPLETED';
                     render();
@@ -1121,9 +1222,12 @@ html {
                 });
             }
 
-            // start
-            phase = 'PID_ENTRY';
-            render();
+            // ---------- start with loading screen, then PID entry ----------
+            // Immediately show loading and preload audios
+            startPreloadAndThen(function() {
+                phase = 'PID_ENTRY';
+                render();
+            });
         })();
     </script>
 </body>
