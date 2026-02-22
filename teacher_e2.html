@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Teacher Topic 1 - Educator Evaluation</title>
+    <title>Teacher Topic 2 - Educator Evaluation</title>
     <!-- fonts & clean style -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -427,7 +427,7 @@ html {
 </head>
 <body>
     <div class="study-container" id="mainContainer">
-        <h1 id="mainHeading">environmental audio study</h1>
+        <h1 id="mainHeading">personality development study</h1>
         <div class="subhead">
             <span id="sessionLabel">preparing session</span>
             <span class="badge-session" id="phaseBadge">loading</span>
@@ -438,13 +438,13 @@ html {
     <script>
         (function() {
             // ---------- CONFIG ----------
-            const SHEETDB_URL = 'https://sheetdb.io/api/v1/nnyagfj2hiw0l';
-            const REDIRECT_URL = 'teacher_e2.html';
+            const SHEETDB_URL = 'https://sheetdb.io/api/v1/4kd0j7b4ootab';
+            const REDIRECT_URL = 'thank_you.html';
 
             // Audio file paths (same as original)
             const AUDIO_FILES = {
-                audio1: 'e1_1.wav',
-                audio2: 'e1_2.wav'
+                audio1: 'e2_1.wav',
+                audio2: 'e2_2.wav'
             };
 
             // Educator rating items for each audio
@@ -603,7 +603,7 @@ html {
                 if (!container) return;
 
                 if (phase === 'PRELOAD') {
-                    headingEl.innerText = 'Topic 1 - Educator Evaluation';
+                    headingEl.innerText = 'Topic 2 - Educator Evaluation';
                     phaseBadge.innerText = 'loading';
                     sessionLabel.innerText = 'preparing audio';
                     container.innerHTML = renderPreload();
@@ -612,7 +612,7 @@ html {
                 }
 
                 if (phase === 'PID_ENTRY') {
-                    headingEl.innerText = 'Topic 1 - Educator Evaluation';
+                    headingEl.innerText = 'Topic 2 - Educator Evaluation';
                     phaseBadge.innerText = 'start';
                     sessionLabel.innerText = 'enter educator ID';
                     container.innerHTML = renderPidEntry();
@@ -698,7 +698,7 @@ html {
                 
                 return `
                     <div class="content-card">
-                        <h2 style="font-weight:500; margin-bottom:0.3rem;">Environment Narration - Audio ${audioLetter}</h2>
+                        <h2 style="font-weight:500; margin-bottom:0.3rem;">Personality Development Narration - Audio ${audioLetter}</h2>
                         <p style="color:#3d637b; margin-bottom:1rem;">Play Audio ${audioLetter} and listen fully. You may replay or seek as needed.</p>
                         
                         <div class="audio-player">
@@ -831,7 +831,7 @@ html {
             function renderComparative() {
                 return `
                     <div class="content-card">
-                        <h3 style="margin-bottom:1.5rem;">Environment Comparative Evaluation</h3>
+                        <h3 style="margin-bottom:1.5rem;">Perosonal Development Comparative Evaluation</h3>
                         
                         <div class="question-item">
                             <div class="question-text">ENV-C1. Which version is better for student attention?</div>
@@ -956,7 +956,7 @@ html {
             function renderSubmitScreen() {
                 return `
                     <div class="content-card text-center">
-                        <h2>Loading Topic 2</h2>
+                        <h2>Loading responses</h2>
                         <div class="loader"></div>
                         <p style="margin-top:1.2rem; color:#2e6279;">Saving educator responses...</p>
                     </div>
